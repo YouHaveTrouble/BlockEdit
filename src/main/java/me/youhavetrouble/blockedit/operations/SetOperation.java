@@ -35,8 +35,6 @@ public class SetOperation {
                 processChunkWork(chunkwork.get(element.getAndDecrement()), bePlayer.getSelectionWorld());
             }
         }, 0, 1);
-
-
     }
 
     private void processChunkWork(ChunkWork chunkWork, UUID worldUuid) {
