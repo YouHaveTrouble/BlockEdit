@@ -1,6 +1,7 @@
 package me.youhavetrouble.blockedit;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 
@@ -12,14 +13,30 @@ public class BEPlayer {
     private static final HashMap<UUID, BEPlayer> playerHashMap = new HashMap<>();
     private BoundingBox selection;
     private Location selectionPoint1, selectionPoint2;
+    private World selectionWorld;
 
     public BoundingBox getSelection() {
         return selection;
     }
 
     private void updateSelection() {
-        if (selectionPoint1 == null || selectionPoint2 == null) return;
+        if (selectionPoint1 == null || selectionPoint2 == null) {
+            selection = null;
+            return;
+        }
+        if (selectionPoint1.getWorld() == null || selectionPoint2 == null) {
+            selection = null;
+            return;
+        }
+        if (!selectionPoint1.getWorld().equals(selectionPoint2.getWorld())) {
+            selection = null;
+            return;
+        }
+        selectionWorld = selectionPoint1.getWorld();
         selection = BoundingBox.of(selectionPoint1, selectionPoint2);
+        // bounding boxes are dumb.
+        selection.expand(0.5, 0.5, 0.5);
+        selection.shift(0.5,0.5,0.5);
     }
 
     public void setSelectionPoint1(Location selectionPoint1) {
@@ -32,6 +49,13 @@ public class BEPlayer {
         if (this.selectionPoint2 != null && this.selectionPoint2.equals(selectionPoint2)) return;
         this.selectionPoint2 = selectionPoint2;
         updateSelection();
+    }
+
+    /**
+     * @return World withinn which the selection is made.
+     */
+    public World getSelectionWorld() {
+        return selectionWorld;
     }
 
     /**

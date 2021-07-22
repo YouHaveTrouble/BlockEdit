@@ -12,11 +12,11 @@ public class WorkSplitterTest {
      */
     @Test
     public void testLocationToChunk() {
-        ChunkWork testOne = new ChunkWork(0,0, null);
-        ChunkWork workSplitterTestOne = WorkSplitter.locationToChunkWork(15, 15, null);
+        ChunkWork testOne = new ChunkWork(0,0);
+        ChunkWork workSplitterTestOne = WorkSplitter.locationToChunkWork(15, 15);
 
-        ChunkWork testTwo = WorkSplitter.locationToChunkWork(10.233D, -138.788D, null);
-        ChunkWork workSplitterTestTwo = new ChunkWork(0,-9, null);
+        ChunkWork testTwo = WorkSplitter.locationToChunkWork(10.233D, -138.788D);
+        ChunkWork workSplitterTestTwo = new ChunkWork(0,-9);
 
         assertEquals(workSplitterTestOne.getX(), testOne.getX());
         assertEquals(workSplitterTestOne.getZ(), testOne.getZ());

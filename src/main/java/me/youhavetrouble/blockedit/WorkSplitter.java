@@ -5,26 +5,27 @@ import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public class WorkSplitter {
 
-    public static Set<ChunkWork> getOperatedOnChunks(BoundingBox boundingBox, World world) {
+    public static HashSet<ChunkWork> getOperatedOnChunks(BoundingBox boundingBox, World world) {
         HashSet<ChunkWork> chunks = new HashSet<>();
-        for (double x = boundingBox.getMinX(); x<= boundingBox.getMaxX(); x+=16) {
-            for (double z = boundingBox.getMinZ(); z <= boundingBox.getMaxZ(); z+=16) {
-                ChunkWork chunkWork = locationToChunkWork(x,z, world);
+        ChunkWork chunkWork = new ChunkWork(0,0);
+        // TODO Find a way to get chunks in the selection more efficiently
+        for (double x = boundingBox.getMinX(); x <= boundingBox.getMaxX(); x++) {
+            for (double z = boundingBox.getMinZ(); z <= boundingBox.getMaxZ(); z++) {
+                chunkWork.setCoords(x,z);
                 if (chunks.contains(chunkWork)) continue;
-                chunks.add(chunkWork);
+                chunks.add(chunkWork.clone());
             }
         }
         return chunks;
     }
 
-    public static ChunkWork locationToChunkWork(double x, double z, World world) {
+    public static ChunkWork locationToChunkWork(double x, double z) {
         int chunkX = (int) x >> 4;
         int chunkZ = (int) z >> 4;
-        return new ChunkWork(chunkX, chunkZ, world);
+        return new ChunkWork(chunkX, chunkZ);
     }
 
 }

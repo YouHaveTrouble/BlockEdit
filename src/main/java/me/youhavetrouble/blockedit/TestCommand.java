@@ -21,12 +21,13 @@ public class TestCommand implements CommandExecutor {
         if (sender instanceof Player player) {
 
             Location location = player.getLocation();
-            ChunkWork work = WorkSplitter.locationToChunkWork(location.getX(), location.getZ(), location.getWorld());
             if (task != null) {
                 task.cancel();
             }
+            // That's how manually checking if selection is valid looks like.
             task = Bukkit.getScheduler().runTaskTimerAsynchronously(BlockEdit.getPlugin(),() -> {
-                BoundingBox box = work.getWorkspace(null);
+                BoundingBox box = BEPlayer.getByPlayer(player).getSelection();
+                if (box == null) return;
                 for (int y = 0; y< 255; y++) {
                     location.getWorld().spawnParticle(Particle.END_ROD, box.getMaxX(), y, box.getMaxZ(), 0, 0.01, 0.01, 0.01);
                     location.getWorld().spawnParticle(Particle.END_ROD, box.getMinX(), y, box.getMinZ(), 0, 0.01, 0.01, 0.01);

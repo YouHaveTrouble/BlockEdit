@@ -10,4 +10,7 @@ commands:
     description: test
   /wand:
     permission: blockedit.wand
-    description: gives you a blockedit wand
+    description: Gives you a blockedit wand
+  /set:
+    permission: blockedit.set
+    description: Set selection to chosen block
