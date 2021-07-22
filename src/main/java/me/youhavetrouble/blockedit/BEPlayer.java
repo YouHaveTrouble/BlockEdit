@@ -13,7 +13,7 @@ public class BEPlayer {
     private static final HashMap<UUID, BEPlayer> playerHashMap = new HashMap<>();
     private BoundingBox selection;
     private Location selectionPoint1, selectionPoint2;
-    private World selectionWorld;
+    private UUID selectionWorldUuid;
 
     public BoundingBox getSelection() {
         return selection;
@@ -32,7 +32,7 @@ public class BEPlayer {
             selection = null;
             return;
         }
-        selectionWorld = selectionPoint1.getWorld();
+        selectionWorldUuid = selectionPoint1.getWorld().getUID();
         selection = BoundingBox.of(selectionPoint1, selectionPoint2);
         // bounding boxes are dumb.
         selection.expand(0.5, 0.5, 0.5);
@@ -54,8 +54,9 @@ public class BEPlayer {
     /**
      * @return World withinn which the selection is made.
      */
-    public World getSelectionWorld() {
-        return selectionWorld;
+    public UUID getSelectionWorld() {
+        if (selection == null) return null;
+        return selectionPoint1.getWorld().getUID();
     }
 
     /**

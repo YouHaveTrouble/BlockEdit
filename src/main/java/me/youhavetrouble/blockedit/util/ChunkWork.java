@@ -2,7 +2,6 @@ package me.youhavetrouble.blockedit.util;
 
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.util.BoundingBox;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -14,17 +13,8 @@ public class ChunkWork {
         setCoords(x,z);
     }
 
-    public BoundingBox getWorkspace(BoundingBox selection, World world) {
-        // TODO make it return shared space of getChunkBox and selection to cull some of the blocks from iterations
-        return getChunkBox(world);
-    }
-
     public CompletableFuture<Chunk> getChunkAsync(World world) {
         return world.getChunkAtAsync(x,z, true);
-    }
-
-    private BoundingBox getChunkBox(World world) {
-        return new BoundingBox(x*16, world.getMinHeight(), z*16, (x+1)*16, world.getMaxHeight(), (z+1)*16);
     }
 
     public int getX() {

@@ -38,7 +38,7 @@ public class SetCommand implements TabExecutor {
                 player.sendMessage(Component.text("You need to select 2 points to do this"));
                 return true;
             }
-            new SetOperation(WorkSplitter.getOperatedOnChunks(selection, bePlayer.getSelectionWorld()), bePlayer.getSelectionWorld(), selection, blockData);
+            new SetOperation(WorkSplitter.getOperatedOnChunks(selection), bePlayer, blockData, 1);
         }
         return true;
     }

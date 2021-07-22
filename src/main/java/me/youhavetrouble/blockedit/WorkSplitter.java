@@ -1,14 +1,13 @@
 package me.youhavetrouble.blockedit;
 
 import me.youhavetrouble.blockedit.util.ChunkWork;
-import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
 
 import java.util.HashSet;
 
 public class WorkSplitter {
 
-    public static HashSet<ChunkWork> getOperatedOnChunks(BoundingBox boundingBox, World world) {
+    public static HashSet<ChunkWork> getOperatedOnChunks(BoundingBox boundingBox) {
         HashSet<ChunkWork> chunks = new HashSet<>();
         ChunkWork chunkWork = new ChunkWork(0,0);
         // TODO Find a way to get chunks in the selection more efficiently
