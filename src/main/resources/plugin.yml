@@ -1,0 +1,13 @@
+name: BlockEdit
+version: ${project.version}
+main: me.youhavetrouble.blockedit.BlockEdit
+api-version: 1.17
+authors: [ YouHaveTrouble ]
+description: Modern WorldEdit alternative
+website: youhavetrouble.me
+commands:
+  test:
+    description: test
+  /wand:
+    permission: blockedit.wand
+    description: gives you a blockedit wand
