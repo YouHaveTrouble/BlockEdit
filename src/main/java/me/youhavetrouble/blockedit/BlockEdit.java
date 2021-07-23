@@ -1,6 +1,7 @@
 package me.youhavetrouble.blockedit;
 
 import me.youhavetrouble.blockedit.api.BlockEditWands;
+import me.youhavetrouble.blockedit.commands.ReplaceCommand;
 import me.youhavetrouble.blockedit.commands.SetCommand;
 import me.youhavetrouble.blockedit.commands.WandCommand;
 import me.youhavetrouble.blockedit.wands.SelectionWand;
@@ -34,6 +35,12 @@ public final class BlockEdit extends JavaPlugin {
         if (bukkitSetCommand != null) {
             bukkitSetCommand.setExecutor(setCommand);
             bukkitSetCommand.setTabCompleter(setCommand);
+        }
+        ReplaceCommand replaceCommand = new ReplaceCommand();
+        PluginCommand bukkitReplaceCommand = getCommand("/replace");
+        if (bukkitReplaceCommand != null) {
+            bukkitReplaceCommand.setExecutor(replaceCommand);
+            bukkitReplaceCommand.setTabCompleter(replaceCommand);
         }
 
     }

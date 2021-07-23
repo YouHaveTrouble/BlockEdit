@@ -13,4 +13,7 @@ commands:
     description: Gives you a blockedit wand
   /set:
     permission: blockedit.set
-    description: Set selection to chosen block
+    description: Set selection area to chosen block
+  /replace:
+    permission: blockedit.replace
+    description: Replace selected blocks in selection area
