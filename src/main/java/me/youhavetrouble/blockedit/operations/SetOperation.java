@@ -24,6 +24,7 @@ public class SetOperation {
         this.selection = bePlayer.getSelection();
         this.blockToSet = blockToSet;
         this.chunkwork.addAll(chunkWorks);
+
         AtomicInteger element = new AtomicInteger(chunkwork.size()-1);
 
         Bukkit.getScheduler().runTaskTimer(BlockEdit.getPlugin(), (task) -> {
@@ -31,7 +32,7 @@ public class SetOperation {
                 task.cancel();
                 return;
             }
-            for (int i = 0; i<= chunksPerTick; i++) {
+            for (int i = 0; i< chunksPerTick; i++) {
                 processChunkWork(chunkwork.get(element.getAndDecrement()), bePlayer.getSelectionWorld());
             }
         }, 0, 1);

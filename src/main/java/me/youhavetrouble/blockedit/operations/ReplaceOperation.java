@@ -33,7 +33,7 @@ public class ReplaceOperation {
                 task.cancel();
                 return;
             }
-            for (int i = 0; i<= chunksPerTick; i++) {
+            for (int i = 0; i< chunksPerTick; i++) {
                 processChunkWork(chunkwork.get(element.getAndDecrement()), bePlayer.getSelectionWorld());
             }
         }, 0, 1);
