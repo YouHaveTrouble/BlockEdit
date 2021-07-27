@@ -2,7 +2,9 @@ package me.youhavetrouble.blockedit.commands;
 
 import me.youhavetrouble.blockedit.BEPlayer;
 import me.youhavetrouble.blockedit.WorkSplitter;
+import me.youhavetrouble.blockedit.api.BlockEditAPI;
 import me.youhavetrouble.blockedit.operations.SetOperation;
+import me.youhavetrouble.blockedit.util.Selection;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -38,7 +40,7 @@ public class SetCommand implements TabExecutor {
                 player.sendMessage(Component.text("You need to select 2 points to do this"));
                 return true;
             }
-            new SetOperation(WorkSplitter.getOperatedOnChunks(selection), bePlayer, blockData, 1);
+            BlockEditAPI.runOperation(new Selection(selection, bePlayer.getSelectionWorld()), 1, new SetOperation(blockData));
         }
         return true;
     }

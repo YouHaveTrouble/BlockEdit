@@ -2,7 +2,9 @@ package me.youhavetrouble.blockedit.commands;
 
 import me.youhavetrouble.blockedit.BEPlayer;
 import me.youhavetrouble.blockedit.WorkSplitter;
+import me.youhavetrouble.blockedit.api.BlockEditAPI;
 import me.youhavetrouble.blockedit.operations.ReplaceOperation;
+import me.youhavetrouble.blockedit.util.Selection;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -31,12 +33,12 @@ public class ReplaceCommand implements TabExecutor {
             player.sendMessage(Component.text("You need to provide block type to replace"));
             return true;
         }
-        Material materialToReplace = Material.getMaterial(args[0].toUpperCase());
+        Material materialToReplace = Material.getMaterial(args[1].toUpperCase());
         if (materialToReplace == null) {
             player.sendMessage(Component.text("Provided material does not exist"));
             return true;
         }
-        Material material = Material.getMaterial(args[1].toUpperCase());
+        Material material = Material.getMaterial(args[0].toUpperCase());
         if (material == null) {
             player.sendMessage(Component.text("Provided material does not exist"));
             return true;
@@ -50,7 +52,7 @@ public class ReplaceCommand implements TabExecutor {
             player.sendMessage(Component.text("You need to select 2 points to do this"));
             return true;
         }
-        new ReplaceOperation(WorkSplitter.getOperatedOnChunks(selection), bePlayer,blockDataToReplaceWith, blockData, 1);
+        BlockEditAPI.runOperation(new Selection(selection, bePlayer.getSelectionWorld()), 1, new ReplaceOperation(blockData, blockDataToReplaceWith));
         return true;
     }
 
