@@ -1,7 +1,6 @@
 package me.youhavetrouble.blockedit.commands;
 
 import me.youhavetrouble.blockedit.BEPlayer;
-import me.youhavetrouble.blockedit.WorkSplitter;
 import me.youhavetrouble.blockedit.api.BlockEditAPI;
 import me.youhavetrouble.blockedit.operations.ReplaceOperation;
 import me.youhavetrouble.blockedit.util.Selection;

@@ -17,6 +17,10 @@ public class BEPlayer {
         return selection;
     }
 
+    public void resetSelection() {
+        this.selection = null;
+    }
+
     private void updateSelection() {
         if (selectionPoint1 == null || selectionPoint2 == null) {
             selection = null;

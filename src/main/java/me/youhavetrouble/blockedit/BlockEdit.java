@@ -1,11 +1,10 @@
 package me.youhavetrouble.blockedit;
 
 import me.youhavetrouble.blockedit.api.BlockEditWands;
-import me.youhavetrouble.blockedit.commands.ReplaceCommand;
-import me.youhavetrouble.blockedit.commands.SetCommand;
-import me.youhavetrouble.blockedit.commands.WandCommand;
+import me.youhavetrouble.blockedit.commands.*;
 import me.youhavetrouble.blockedit.wands.SelectionWand;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class BlockEdit extends JavaPlugin {
@@ -22,31 +21,25 @@ public final class BlockEdit extends JavaPlugin {
         BlockEditWands.registerWand(selectionWand);
         getServer().getPluginManager().registerEvents(selectionWand, this);
 
-        //getCommand("test").setExecutor(new TestCommand());
-
-        WandCommand wandCommand = new WandCommand();
-        PluginCommand bukkitWandCommand = getCommand("/wand");
-        if (bukkitWandCommand != null) {
-            bukkitWandCommand.setExecutor(wandCommand);
-            bukkitWandCommand.setTabCompleter(wandCommand);
-        }
-        SetCommand setCommand = new SetCommand();
-        PluginCommand bukkitSetCommand = getCommand("/set");
-        if (bukkitSetCommand != null) {
-            bukkitSetCommand.setExecutor(setCommand);
-            bukkitSetCommand.setTabCompleter(setCommand);
-        }
-        ReplaceCommand replaceCommand = new ReplaceCommand();
-        PluginCommand bukkitReplaceCommand = getCommand("/replace");
-        if (bukkitReplaceCommand != null) {
-            bukkitReplaceCommand.setExecutor(replaceCommand);
-            bukkitReplaceCommand.setTabCompleter(replaceCommand);
-        }
+        registerCommand("/wand", new WandCommand());
+        registerCommand("/set", new SetCommand());
+        registerCommand("/replace", new ReplaceCommand());
+        registerCommand("/pos1", new Pos1Command());
+        registerCommand("/pos2", new Pos2Command());
+        registerCommand("/desel", new DeselCommand());
 
     }
 
 
     public static BlockEdit getPlugin() {
         return plugin;
+    }
+
+    private void registerCommand(String command, TabExecutor executor) {
+        PluginCommand bukkitReplaceCommand = getCommand(command);
+        if (bukkitReplaceCommand != null) {
+            bukkitReplaceCommand.setExecutor(executor);
+            bukkitReplaceCommand.setTabCompleter(executor);
+        }
     }
 }

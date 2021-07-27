@@ -6,14 +6,18 @@ authors: [ YouHaveTrouble ]
 description: Modern WorldEdit alternative
 website: youhavetrouble.me
 commands:
-  test:
-    description: test
   /wand:
     permission: blockedit.wand
     description: Gives you a blockedit wand
   /set:
-    permission: blockedit.set
+    permission: blockedit.command.set
     description: Set selection area to chosen block
   /replace:
-    permission: blockedit.replace
+    permission: blockedit.command.replace
     description: Replace selected blocks in selection area
+  /pos1:
+    permission: blockedit.command.pos
+  /pos2:
+    permission: blockedit.command.pos
+  /desel:
+    permission: blockedit.command.desel
