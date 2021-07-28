@@ -15,7 +15,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
-/**
+/*
  * Highlighting selection blocks thanks to https://github.com/ArtFect/BlockHighlight
  *
  * MIT License
@@ -43,6 +43,7 @@ import java.nio.charset.StandardCharsets;
 public class SelectionHighlight {
 
     public static void highlightBlock(Player player, Location location, String color, String text, int time) {
+        if (location == null) return;
         if (BlockEdit.getPlugin().getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
             sendBlockHighlight(player, location, color, text, time);
         }

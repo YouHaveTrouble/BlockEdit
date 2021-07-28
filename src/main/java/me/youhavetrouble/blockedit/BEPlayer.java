@@ -30,7 +30,8 @@ public class BEPlayer {
 
     public void resetSelection() {
         this.selection = null;
-        Bukkit.getScheduler().runTaskAsynchronously(BlockEdit.getPlugin(),() -> SelectionHighlight.sendStop(getPlayer()));
+        this.selectionPoint1 = null;
+        this.selectionPoint2 = null;
     }
 
     private void updateSelection() {
@@ -46,18 +47,6 @@ public class BEPlayer {
             selection = null;
             return;
         }
-
-        Bukkit.getScheduler().runTaskAsynchronously(BlockEdit.getPlugin(), () -> {
-            SelectionHighlight.sendStop(getPlayer());
-            if (selectionPoint1.equals(selectionPoint2)) {
-                SelectionHighlight.highlightBlock(getPlayer(), selectionPoint1, "#ffffff", "Selection Points", 10000);
-            } else {
-                SelectionHighlight.highlightBlock(getPlayer(), selectionPoint1, "#ffffff", "Selection Point 1", 10000);
-                SelectionHighlight.highlightBlock(getPlayer(), selectionPoint2, "#ffffff", "Selection Point 2", 10000);
-            }
-
-        });
-
 
         selection = BoundingBox.of(selectionPoint1, selectionPoint2);
         // bounding boxes are dumb.
@@ -89,6 +78,7 @@ public class BEPlayer {
      * @return Clone of selectionPoint1
      */
     public Location getSelectionPoint1() {
+        if (selectionPoint1 == null) return null;
         return selectionPoint1.clone();
     }
 
@@ -96,6 +86,7 @@ public class BEPlayer {
      * @return Clone of selectionPoint2
      */
     public Location getSelectionPoint2() {
+        if (selectionPoint2 == null) return null;
         return selectionPoint2.clone();
     }
 
