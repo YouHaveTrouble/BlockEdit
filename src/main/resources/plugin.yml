@@ -5,6 +5,8 @@ api-version: 1.17
 authors: [ YouHaveTrouble ]
 description: Modern WorldEdit alternative
 website: youhavetrouble.me
+softdepend:
+  - ProtocolLib
 commands:
   /wand:
     permission: blockedit.wand

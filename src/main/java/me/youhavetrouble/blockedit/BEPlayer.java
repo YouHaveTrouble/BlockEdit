@@ -1,5 +1,7 @@
 package me.youhavetrouble.blockedit;
 
+import me.youhavetrouble.blockedit.optionals.SelectionHighlight;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
@@ -12,6 +14,15 @@ public class BEPlayer {
     private static final HashMap<UUID, BEPlayer> playerHashMap = new HashMap<>();
     private BoundingBox selection;
     private Location selectionPoint1, selectionPoint2;
+    private final UUID playerUuid;
+
+    public BEPlayer(Player player) {
+        this.playerUuid = player.getUniqueId();
+    }
+
+    public Player getPlayer() {
+        return Bukkit.getPlayer(playerUuid);
+    }
 
     public BoundingBox getSelection() {
         return selection;
@@ -19,6 +30,7 @@ public class BEPlayer {
 
     public void resetSelection() {
         this.selection = null;
+        Bukkit.getScheduler().runTaskAsynchronously(BlockEdit.getPlugin(),() -> SelectionHighlight.sendStop(getPlayer()));
     }
 
     private void updateSelection() {
@@ -34,6 +46,19 @@ public class BEPlayer {
             selection = null;
             return;
         }
+
+        Bukkit.getScheduler().runTaskAsynchronously(BlockEdit.getPlugin(), () -> {
+            SelectionHighlight.sendStop(getPlayer());
+            if (selectionPoint1.equals(selectionPoint2)) {
+                SelectionHighlight.highlightBlock(getPlayer(), selectionPoint1, "#ffffff", "Selection Points", 10000);
+            } else {
+                SelectionHighlight.highlightBlock(getPlayer(), selectionPoint1, "#ffffff", "Selection Point 1", 10000);
+                SelectionHighlight.highlightBlock(getPlayer(), selectionPoint2, "#ffffff", "Selection Point 2", 10000);
+            }
+
+        });
+
+
         selection = BoundingBox.of(selectionPoint1, selectionPoint2);
         // bounding boxes are dumb.
         selection.expand(0.5, 0.5, 0.5);
@@ -75,7 +100,7 @@ public class BEPlayer {
     }
 
     protected static void addPlayer(Player player) {
-        playerHashMap.put(player.getUniqueId(), new BEPlayer());
+        playerHashMap.put(player.getUniqueId(), new BEPlayer(player));
     }
 
     protected static void removePlayer(Player player) {
