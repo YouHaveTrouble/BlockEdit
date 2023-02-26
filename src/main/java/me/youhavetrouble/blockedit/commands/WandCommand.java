@@ -4,21 +4,24 @@ import me.youhavetrouble.blockedit.api.BlockEditWands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WandCommand implements TabExecutor {
+public class WandCommand extends Command {
+
+    public WandCommand() {
+        super("wand");
+        setPermission("blockedit.command.wand");
+    }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) return true;
+    public boolean execute(@NotNull CommandSender commandSender, @NotNull String s, @NotNull String[] args) {
+        if (!(commandSender instanceof Player player)) return true;
         ItemStack wand;
         if (args.length == 0) {
             wand = BlockEditWands.getWand("select");
@@ -34,11 +37,11 @@ public class WandCommand implements TabExecutor {
         return true;
     }
 
-
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1)
             return StringUtil.copyPartialMatches(args[0], BlockEditWands.getWandIds(), new ArrayList<>());
-        return null;
+        return new ArrayList<>();
     }
+
 }

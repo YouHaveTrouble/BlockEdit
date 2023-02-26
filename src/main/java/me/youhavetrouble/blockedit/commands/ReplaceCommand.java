@@ -9,21 +9,37 @@ import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReplaceCommand implements TabExecutor {
+public class ReplaceCommand extends Command {
+
+    public ReplaceCommand() {
+        super("replace");
+        setPermission("blockedit.command.replace");
+    }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) return true;
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1 || args.length == 2) {
+            ArrayList<String> suggestions = new ArrayList<>();
+            for (Material material : Material.values()) {
+                if (material.isBlock())
+                    suggestions.add(material.name().toLowerCase());
+            }
+            return StringUtil.copyPartialMatches(args[args.length-1], suggestions, new ArrayList<>());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public boolean execute(@NotNull CommandSender commandSender, @NotNull String s, @NotNull String[] args) {
+        if (!(commandSender instanceof Player player)) return true;
         if (args.length == 0) {
             player.sendMessage(Component.text("You need to provide block type"));
             return true;
@@ -54,18 +70,4 @@ public class ReplaceCommand implements TabExecutor {
         BlockEditAPI.runOperation(new Selection(selection, bePlayer.getSelectionWorld()), 1, new ReplaceOperation(blockData, blockDataToReplaceWith));
         return true;
     }
-
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1 || args.length == 2) {
-            ArrayList<String> suggestions = new ArrayList<>();
-            for (Material material : Material.values()) {
-                if (material.isBlock())
-                    suggestions.add(material.name().toLowerCase());
-            }
-            return StringUtil.copyPartialMatches(args[args.length-1], suggestions, new ArrayList<>());
-        }
-        return null;
-    }
-
 }

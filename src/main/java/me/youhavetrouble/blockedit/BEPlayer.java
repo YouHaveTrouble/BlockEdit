@@ -1,6 +1,5 @@
 package me.youhavetrouble.blockedit;
 
-import me.youhavetrouble.blockedit.optionals.SelectionHighlight;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

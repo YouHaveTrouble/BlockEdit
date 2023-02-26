@@ -3,6 +3,7 @@ package me.youhavetrouble.blockedit;
 import me.youhavetrouble.blockedit.api.BlockEditWands;
 import me.youhavetrouble.blockedit.commands.*;
 import me.youhavetrouble.blockedit.wands.SelectionWand;
+import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,12 +22,12 @@ public final class BlockEdit extends JavaPlugin {
         BlockEditWands.registerWand(selectionWand);
         getServer().getPluginManager().registerEvents(selectionWand, this);
 
-        registerCommand("/wand", new WandCommand());
-        registerCommand("/set", new SetCommand());
-        registerCommand("/replace", new ReplaceCommand());
-        registerCommand("/pos1", new Pos1Command());
-        registerCommand("/pos2", new Pos2Command());
-        registerCommand("/desel", new DeselCommand());
+        registerCommand(new WandCommand());
+        registerCommand(new SetCommand());
+        registerCommand(new ReplaceCommand());
+        registerCommand(new DeselCommand());
+        registerCommand(new Pos1Command());
+        registerCommand(new Pos2Command());
 
     }
 
@@ -35,11 +36,7 @@ public final class BlockEdit extends JavaPlugin {
         return plugin;
     }
 
-    private void registerCommand(String command, TabExecutor executor) {
-        PluginCommand bukkitReplaceCommand = getCommand(command);
-        if (bukkitReplaceCommand != null) {
-            bukkitReplaceCommand.setExecutor(executor);
-            bukkitReplaceCommand.setTabCompleter(executor);
-        }
+    private void registerCommand(Command command) {
+        getServer().getCommandMap().register("blockedit", command);
     }
 }

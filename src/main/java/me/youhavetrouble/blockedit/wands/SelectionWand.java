@@ -1,14 +1,10 @@
 package me.youhavetrouble.blockedit.wands;
 
 import me.youhavetrouble.blockedit.BEPlayer;
-import me.youhavetrouble.blockedit.BlockEdit;
 import me.youhavetrouble.blockedit.api.BlockEditWand;
 import me.youhavetrouble.blockedit.api.BlockEditWands;
-import me.youhavetrouble.blockedit.optionals.SelectionHighlight;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,42 +48,15 @@ public class SelectionWand implements Listener, BlockEditWand {
         if (action.equals(Action.LEFT_CLICK_BLOCK)) {
             event.setCancelled(true);
             BEPlayer.getByPlayer(player).setSelectionPoint1(block.getLocation());
-            highlightPoints(player);
             player.sendMessage(Component.text("First point set"));
             return;
         }
         if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
             event.setCancelled(true);
             BEPlayer.getByPlayer(player).setSelectionPoint2(block.getLocation());
-            highlightPoints(player);
             player.sendMessage(Component.text("Second point set"));
             return;
         }
     }
 
-    private void highlightPoints(Player player) {
-        Bukkit.getScheduler().runTaskAsynchronously(BlockEdit.getPlugin(), () -> {
-            BEPlayer bePlayer = BEPlayer.getByPlayer(player);
-            SelectionHighlight.sendStop(player);
-
-            Location selection1 = bePlayer.getSelectionPoint1();
-            Location selection2 = bePlayer.getSelectionPoint2();
-
-            if (selection1 != null && selection1.equals(selection2)) {
-                SelectionHighlight.highlightBlock(player, bePlayer.getSelectionPoint1(), "#ffffff", "Selection Points", 10000);
-                return;
-            }
-            if (selection1 != null && !selection1.equals(selection2)) {
-                SelectionHighlight.highlightBlock(player, bePlayer.getSelectionPoint1(), "#ffffff", "Selection Point 1", 10000);
-            }
-            if (selection2 != null && !selection2.equals(selection1)) {
-                SelectionHighlight.highlightBlock(player, bePlayer.getSelectionPoint2(), "#ffffff", "Selection Point 2", 10000);
-            }
-
-
-
-
-
-        });
-    }
 }
