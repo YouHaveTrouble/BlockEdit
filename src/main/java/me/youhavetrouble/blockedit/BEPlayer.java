@@ -1,9 +1,11 @@
 package me.youhavetrouble.blockedit;
 
+import me.youhavetrouble.blockedit.util.Clipboard;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -12,11 +14,14 @@ public class BEPlayer {
 
     private static final HashMap<UUID, BEPlayer> playerHashMap = new HashMap<>();
     private BoundingBox selection;
+
+    private final Clipboard clipboard;
     private Location selectionPoint1, selectionPoint2;
     private final UUID playerUuid;
 
     public BEPlayer(Player player) {
         this.playerUuid = player.getUniqueId();
+        this.clipboard = new Clipboard(player.getLocation());
     }
 
     public Player getPlayer() {
@@ -25,6 +30,26 @@ public class BEPlayer {
 
     public BoundingBox getSelection() {
         return selection;
+    }
+
+    public Clipboard getClipboard() {
+        return clipboard;
+    }
+
+    public void setClipboardFromSelection() {
+        if (selection == null) throw new IllegalStateException("Selection is null");
+        // add every block between selection points to clipboard
+        clipboard.setBaseLocation(getPlayer().getLocation());
+        for (int x = (int) selection.getMinX(); x <= selection.getMaxX(); x++) {
+            for (int y = (int) selection.getMinY(); y <= selection.getMaxY(); y++) {
+                for (int z = (int) selection.getMinZ(); z <= selection.getMaxZ(); z++) {
+                    Vector relativeLocation = new Vector(x, y, z).subtract(clipboard.getBaseLocationVector());
+                    Location location = new Location(selectionPoint1.getWorld(), x, y, z);
+                    clipboard.addBlock(relativeLocation, location.getBlock().getState());
+                }
+            }
+        }
+
     }
 
     public void resetSelection() {
