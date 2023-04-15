@@ -39,7 +39,8 @@ public class BEPlayer {
     public void setClipboardFromSelection() {
         if (selection == null) throw new IllegalStateException("Selection is null");
         // add every block between selection points to clipboard
-        clipboard.setBaseLocation(getPlayer().getLocation());
+        clipboard.clear();
+        clipboard.setBaseLocation(getPlayer().getLocation().toBlockLocation());
         for (int x = (int) selection.getMinX(); x <= selection.getMaxX(); x++) {
             for (int y = (int) selection.getMinY(); y <= selection.getMaxY(); y++) {
                 for (int z = (int) selection.getMinZ(); z <= selection.getMaxZ(); z++) {

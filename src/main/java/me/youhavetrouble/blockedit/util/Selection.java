@@ -4,7 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 
+import java.util.Set;
 import java.util.UUID;
 
 public class Selection extends BoundingBox {
@@ -42,5 +44,24 @@ public class Selection extends BoundingBox {
 
     public void setWorldUuid(UUID worldUuid) {
         this.worldUuid = worldUuid;
+    }
+
+    public static Selection fromClipboard(Set<Vector> locations, World world) {
+        Vector closestVector = new Vector(Double.MAX_VALUE,Double.MAX_VALUE,Double.MAX_VALUE);
+        Vector farthestVector = new Vector(Double.MIN_VALUE,Double.MIN_VALUE,Double.MIN_VALUE);
+
+        for (Vector vector : locations) {
+            if (vector.getX() + vector.getY() + vector.getZ() < closestVector.getX() + closestVector.getY() + closestVector.getZ()) {
+                closestVector = vector;
+            }
+            if (vector.getX() + vector.getY() + vector.getZ() > farthestVector.getX() + farthestVector.getY() + farthestVector.getZ()) {
+                farthestVector = vector;
+            }
+        }
+
+        Location minLocation = closestVector.toLocation(world);
+        Location maxLocation = farthestVector.toLocation(world);
+
+        return new Selection(minLocation, maxLocation, world.getUID());
     }
 }

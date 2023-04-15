@@ -30,7 +30,7 @@ public class Clipboard {
     }
 
     public void setBaseLocation(Location baseLocation) {
-        this.baseLocation = baseLocation;
+        this.baseLocation = baseLocation.toBlockLocation();
         this.baseLocationVector = baseLocation.toVector();
     }
 
@@ -54,7 +54,7 @@ public class Clipboard {
      * Rotates clipboard by specified degrees around the base location.
      * @param angle angle in degrees
      */
-    public void rotate(int angle) {
+    public void rotate(double angle) {
         for (Map.Entry<Vector, BlockState> entry : this.blocks.entrySet()) {
             Vector relativeLocation = entry.getKey();
             relativeLocation.rotateAroundAxis(baseLocationVector, angle);

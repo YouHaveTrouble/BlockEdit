@@ -28,6 +28,8 @@ public final class BlockEdit extends JavaPlugin {
         registerCommand(new DeselCommand());
         registerCommand(new Pos1Command());
         registerCommand(new Pos2Command());
+        registerCommand(new CopyCommand());
+        registerCommand(new PasteCommand());
 
     }
 
