@@ -1,6 +1,6 @@
-package me.youhavetrouble.blockedit;
+package me.youhavetrouble.blockedit.api;
 
-import me.youhavetrouble.blockedit.api.BlockEditOperation;
+import me.youhavetrouble.blockedit.BlockEdit;
 import me.youhavetrouble.blockedit.util.ChunkWork;
 import me.youhavetrouble.blockedit.util.Selection;
 import org.bukkit.Bukkit;
@@ -11,12 +11,11 @@ import org.bukkit.util.BoundingBox;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WorkSplitter {
 
-    public static HashSet<ChunkWork> getOperatedOnChunks(BoundingBox boundingBox) {
+    protected static HashSet<ChunkWork> getOperatedOnChunks(BoundingBox boundingBox) {
         HashSet<ChunkWork> chunks = new HashSet<>();
         ChunkWork chunkWork = new ChunkWork(0,0);
         // TODO Find a way to get chunks in the selection more efficiently
@@ -30,7 +29,7 @@ public class WorkSplitter {
         return chunks;
     }
 
-    public static void runOperation(HashSet<ChunkWork> chunkWorks, Selection selection, int chunksPerTick, BlockEditOperation operation) {
+    protected static void runOperation(HashSet<ChunkWork> chunkWorks, Selection selection, int chunksPerTick, BlockEditOperation operation) {
         if (selection == null) return;
         List<ChunkWork> chunkWork = new ArrayList<>(chunkWorks);
         AtomicInteger element = new AtomicInteger(chunkWork.size()-1);

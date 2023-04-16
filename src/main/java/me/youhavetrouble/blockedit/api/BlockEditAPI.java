@@ -1,6 +1,5 @@
 package me.youhavetrouble.blockedit.api;
 
-import me.youhavetrouble.blockedit.WorkSplitter;
 import me.youhavetrouble.blockedit.util.ChunkWork;
 import me.youhavetrouble.blockedit.util.Selection;
 
