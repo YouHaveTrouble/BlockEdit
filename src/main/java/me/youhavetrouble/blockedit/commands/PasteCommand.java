@@ -40,6 +40,7 @@ public class PasteCommand extends Command {
 
         Selection selection = Selection.fromClipboard(absoluteBlocks.keySet(), player.getWorld());
         BlockEditAPI.runOperation(selection, 1, new PasteOperation(absoluteBlocks));
+        player.sendMessage(Component.text("Pasting clipboard..."));
 
         return false;
     }
