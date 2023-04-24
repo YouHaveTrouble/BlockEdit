@@ -1,5 +1,7 @@
 package me.youhavetrouble.blockedit.api;
 
+import me.youhavetrouble.blockedit.BlockEdit;
+import me.youhavetrouble.blockedit.SchematicHandler;
 import me.youhavetrouble.blockedit.util.ChunkWork;
 import me.youhavetrouble.blockedit.util.Selection;
 
@@ -17,4 +19,11 @@ public class BlockEditAPI {
         WorkSplitter.runOperation(work, selection, chunksPerTick, operation);
     }
 
+    /**
+     * Gets schematic handler object that can be used to work with schematics
+     * @return Schematic handler
+     */
+    public SchematicHandler getSchematicHandler() {
+        return BlockEdit.getSchematicHandler();
+    }
 }

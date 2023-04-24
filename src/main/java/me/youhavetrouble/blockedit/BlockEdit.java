@@ -10,6 +10,8 @@ public final class BlockEdit extends JavaPlugin {
 
     private static BlockEdit plugin;
 
+    private static SchematicHandler schematicHandler;
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -30,6 +32,9 @@ public final class BlockEdit extends JavaPlugin {
         registerCommand(new PasteCommand());
         registerCommand(new RotateCommand());
 
+        schematicHandler = new SchematicHandler(this);
+
+
     }
 
 
@@ -37,7 +42,12 @@ public final class BlockEdit extends JavaPlugin {
         return plugin;
     }
 
+    public static SchematicHandler getSchematicHandler() {
+        return schematicHandler;
+    }
+
     private void registerCommand(Command command) {
         getServer().getCommandMap().register("blockedit", command);
     }
+
 }
