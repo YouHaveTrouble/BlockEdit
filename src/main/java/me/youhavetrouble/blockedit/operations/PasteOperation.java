@@ -7,6 +7,10 @@ import org.bukkit.util.Vector;
 
 import java.util.Map;
 
+/**
+ * Pastes blocks from a map of vectors and block states. Caution! Vectors must be floored to align with block locations.
+ * @param blockStateMap
+ */
 public record PasteOperation(Map<Vector, BlockState> blockStateMap) implements BlockEditOperation {
 
     @Override
