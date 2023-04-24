@@ -4,8 +4,6 @@ import me.youhavetrouble.blockedit.api.BlockEditWands;
 import me.youhavetrouble.blockedit.commands.*;
 import me.youhavetrouble.blockedit.wands.SelectionWand;
 import org.bukkit.command.Command;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class BlockEdit extends JavaPlugin {
@@ -30,6 +28,7 @@ public final class BlockEdit extends JavaPlugin {
         registerCommand(new Pos2Command());
         registerCommand(new CopyCommand());
         registerCommand(new PasteCommand());
+        registerCommand(new RotateCommand());
 
     }
 

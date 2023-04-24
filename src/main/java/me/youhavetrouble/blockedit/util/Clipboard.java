@@ -57,7 +57,9 @@ public class Clipboard {
     public void rotate(double angle) {
         for (Map.Entry<Vector, BlockState> entry : this.blocks.entrySet()) {
             Vector relativeLocation = entry.getKey();
-            relativeLocation.rotateAroundAxis(baseLocationVector, angle);
+            relativeLocation.rotateAroundY(angle);
+            relativeLocation.setX((int)relativeLocation.getX());
+            relativeLocation.setZ((int)relativeLocation.getZ());
         }
     }
 
