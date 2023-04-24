@@ -55,11 +55,12 @@ public class Clipboard {
      * @param angle angle in degrees
      */
     public void rotate(double angle) {
+        double radians = Math.toRadians(angle);
         for (Map.Entry<Vector, BlockState> entry : this.blocks.entrySet()) {
             Vector relativeLocation = entry.getKey();
-            relativeLocation.rotateAroundY(angle);
-            relativeLocation.setX((int)relativeLocation.getX());
-            relativeLocation.setZ((int)relativeLocation.getZ());
+            relativeLocation.rotateAroundY(radians);
+            relativeLocation.setX(Math.round(relativeLocation.getX()));
+            relativeLocation.setZ(Math.round(relativeLocation.getZ()));
         }
     }
 
