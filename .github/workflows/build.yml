@@ -14,7 +14,7 @@ jobs:
           java-version: 17
           distribution: 'temurin'
       - name: Build with Maven
-        run: mvn -B package --file pom.xml -Drevision=BlockEdit-${{ github.ref_name }}-${{ github.sha::6 }}
+        run: mvn -B package --file pom.xml -Drevision=BlockEdit-${{ github.ref_name }}-${{ github.sha }}
       - name: Copy artifacts
         run: mkdir staging && cp target/BlockEdit-*.jar staging
       - name: Upload artifacts
