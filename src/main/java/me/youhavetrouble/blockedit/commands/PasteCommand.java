@@ -39,6 +39,7 @@ public class PasteCommand extends Command {
         });
 
         Selection selection = Selection.fromClipboard(absoluteBlocks.keySet(), player.getWorld());
+        selection.expand(1);
         BlockEditAPI.runOperation(selection, 1, new PasteOperation(absoluteBlocks));
         player.sendMessage(Component.text("Pasting clipboard..."));
 

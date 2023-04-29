@@ -73,10 +73,7 @@ public class BEPlayer {
             return;
         }
 
-        selection = BoundingBox.of(selectionPoint1, selectionPoint2);
-        // bounding boxes are dumb.
-        selection.expand(0.5, 0.5, 0.5);
-        selection.shift(0.5,0.5,0.5);
+        selection = BoundingBox.of(selectionPoint1.toBlockLocation(), selectionPoint2.toBlockLocation());
     }
 
     public void setSelectionPoint1(Location selectionPoint1) {

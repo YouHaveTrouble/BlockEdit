@@ -6,6 +6,7 @@ import org.bukkit.block.BlockState;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Clipboard {
@@ -13,7 +14,7 @@ public class Clipboard {
     /**
      * Map of locations relative to the center of the clipboard and their block states
      */
-    private final HashMap<Vector, BlockState> blocks = new HashMap<>();
+    private HashMap<Vector, BlockState> blocks = new HashMap<>();
     private Location baseLocation;
     private Vector baseLocationVector;
 
@@ -56,12 +57,18 @@ public class Clipboard {
      */
     public void rotate(double angle) {
         double radians = Math.toRadians(angle);
-        for (Map.Entry<Vector, BlockState> entry : this.blocks.entrySet()) {
+        HashMap<Vector, BlockState> newBlocks = new HashMap<>();
+        Iterator<Map.Entry<Vector, BlockState>> iterator = this.blocks.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Vector, BlockState> entry = iterator.next();
             Vector relativeLocation = entry.getKey();
             relativeLocation.rotateAroundY(radians);
             relativeLocation.setX(Math.round(relativeLocation.getX()));
             relativeLocation.setZ(Math.round(relativeLocation.getZ()));
+            newBlocks.put(relativeLocation, entry.getValue());
+            iterator.remove();
         }
+        this.blocks = newBlocks;
     }
 
 }
