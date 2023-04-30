@@ -6,7 +6,7 @@ import net.kyori.adventure.text.Component;
 public interface BlockEditWand {
 
     /**
-     * A unique id to identify the wand. Also used in //wand command.
+     * A unique id to identify the wand. Also used in /wand command.
      */
     String getId();
 

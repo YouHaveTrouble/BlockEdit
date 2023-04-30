@@ -31,6 +31,7 @@ public class WorkSplitter {
 
     protected static void runOperation(HashSet<ChunkWork> chunkWorks, Selection selection, int chunksPerTick, BlockEditOperation operation) {
         if (selection == null) return;
+        Selection sel = new Selection(selection.clone().expand(0.1), selection.getWorldUuid());
         List<ChunkWork> chunkWork = new ArrayList<>(chunkWorks);
         AtomicInteger element = new AtomicInteger(chunkWork.size()-1);
         Bukkit.getScheduler().runTaskTimer(BlockEdit.getPlugin(), (task) -> {
@@ -39,7 +40,7 @@ public class WorkSplitter {
                 return;
             }
             for (int i = 0; i< chunksPerTick; i++) {
-                processChunkWork(chunkWork.get(element.getAndDecrement()), selection, operation);
+                processChunkWork(chunkWork.get(element.getAndDecrement()), sel, operation);
             }
         }, 0, 1);
     }

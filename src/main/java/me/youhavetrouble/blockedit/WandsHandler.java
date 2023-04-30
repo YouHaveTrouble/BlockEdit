@@ -1,7 +1,7 @@
-package me.youhavetrouble.blockedit.api;
+package me.youhavetrouble.blockedit;
 
 import com.google.common.collect.ImmutableSet;
-import me.youhavetrouble.blockedit.BlockEdit;
+import me.youhavetrouble.blockedit.api.BlockEditWand;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -11,34 +11,41 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class BlockEditWands {
+public class WandsHandler {
 
-    private static final NamespacedKey wandKey = new NamespacedKey(BlockEdit.getPlugin(), "wand");
+    private final NamespacedKey wandKey;
     private static final HashMap<String, BlockEditWand> wands = new HashMap<>();
 
-    public static NamespacedKey getWandKey() {
-        return wandKey;
+    protected WandsHandler(BlockEdit plugin) {
+        wandKey = new NamespacedKey(plugin, "wand");
+
     }
 
     /**
+     * Gets wand id from ItemStack
      * @param itemStack ItemStack to check
-     * @return WandId if a wand, null otherwise
+     * @return WandId if Itemstack is a wand, null otherwise
      */
-    public static String isWand(ItemStack itemStack) {
+    public String getWandId(ItemStack itemStack) {
         if (itemStack == null) return null;
         if (itemStack.getItemMeta() == null) return null;
-        if (!itemStack.getItemMeta().getPersistentDataContainer().has(BlockEditWands.getWandKey(), PersistentDataType.STRING)) return null;
-        return itemStack.getItemMeta().getPersistentDataContainer().get(BlockEditWands.getWandKey(), PersistentDataType.STRING);
+        if (!itemStack.getItemMeta().getPersistentDataContainer().has(wandKey, PersistentDataType.STRING)) return null;
+        return itemStack.getItemMeta().getPersistentDataContainer().get(wandKey, PersistentDataType.STRING);
     }
 
     /**
      * @return Immutable set of registered wand IDs
      */
-    public static Collection<String> getWandIds() {
+    public Collection<String> getWandIds() {
         return ImmutableSet.copyOf(wands.keySet());
     }
 
-    public static ItemStack getWand(String wandId) {
+    /**
+     * Gets wand ItemStack from wand id
+     * @param wandId Wand id
+     * @return Wand ItemStack if wand with given ID exists, null otherwise
+     */
+    public ItemStack getWand(String wandId) {
         BlockEditWand wand = wands.get(wandId);
         if (wand == null) return null;
         ItemStack itemStack = new ItemStack(Material.WOODEN_AXE);
@@ -47,7 +54,7 @@ public class BlockEditWands {
             meta.displayName(wand.getName());
         if (wand.getCustomModelData() != 0)
             meta.setCustomModelData(wand.getCustomModelData());
-        meta.getPersistentDataContainer().set(BlockEditWands.getWandKey(), PersistentDataType.STRING, wandId);
+        meta.getPersistentDataContainer().set(wandKey, PersistentDataType.STRING, wandId);
         itemStack.setItemMeta(meta);
         return itemStack;
     }
@@ -57,7 +64,7 @@ public class BlockEditWands {
      * PSA: Wand IDs will get converted to lowercase.
      * @return true if registered successfully, false if not
      */
-    public static boolean registerWand(BlockEditWand wand) {
+    public boolean registerWand(BlockEditWand wand) {
         if (wands.containsKey(wand.getId().toLowerCase())) {
             BlockEdit.getPlugin().getLogger().warning("Tried to register wand with id \""+wand.getId()+"\", but wand with that id already exists!");
             return false;

@@ -10,7 +10,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,12 +61,12 @@ public class ReplaceCommand extends Command {
         BlockData blockData = material.createBlockData();
         BlockData blockDataToReplaceWith = materialToReplace.createBlockData();
         BEPlayer bePlayer = BEPlayer.getByPlayer(player);
-        BoundingBox selection = bePlayer.getSelection();
+        Selection selection = bePlayer.getSelection();
         if (selection == null) {
             player.sendMessage(Component.text("You need to select 2 points to do this"));
             return true;
         }
-        BlockEditAPI.runOperation(new Selection(selection, bePlayer.getSelectionWorld()), 1, new ReplaceOperation(blockData, blockDataToReplaceWith));
+        BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(blockData, blockDataToReplaceWith));
         return true;
     }
 }

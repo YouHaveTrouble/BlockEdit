@@ -1,10 +1,10 @@
 package me.youhavetrouble.blockedit;
 
 import me.youhavetrouble.blockedit.util.Clipboard;
+import me.youhavetrouble.blockedit.util.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.UUID;
 public class BEPlayer {
 
     private static final HashMap<UUID, BEPlayer> playerHashMap = new HashMap<>();
-    private BoundingBox selection;
+    private Selection selection;
 
     private final Clipboard clipboard;
     private Location selectionPoint1, selectionPoint2;
@@ -28,7 +28,7 @@ public class BEPlayer {
         return Bukkit.getPlayer(playerUuid);
     }
 
-    public BoundingBox getSelection() {
+    public Selection getSelection() {
         return selection;
     }
 
@@ -73,7 +73,7 @@ public class BEPlayer {
             return;
         }
 
-        selection = BoundingBox.of(selectionPoint1.toBlockLocation(), selectionPoint2.toBlockLocation());
+        selection = new Selection(selectionPoint1.toBlockLocation(), selectionPoint2.toBlockLocation(), selectionPoint1.getWorld().getUID());
     }
 
     public void setSelectionPoint1(Location selectionPoint1) {

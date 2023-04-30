@@ -1,8 +1,8 @@
 package me.youhavetrouble.blockedit.wands;
 
 import me.youhavetrouble.blockedit.BEPlayer;
+import me.youhavetrouble.blockedit.api.BlockEditAPI;
 import me.youhavetrouble.blockedit.api.BlockEditWand;
-import me.youhavetrouble.blockedit.api.BlockEditWands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.block.Block;
@@ -38,7 +38,7 @@ public class SelectionWand implements Listener, BlockEditWand {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerSelectBlock(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        String wandId = BlockEditWands.isWand(event.getItem());
+        String wandId = BlockEditAPI.getWandsHandler().getWandId(event.getItem());
         if (wandId == null) return;
         if (!wandId.equals(getId())) return;
         if (!player.hasPermission(getPermission())) return;

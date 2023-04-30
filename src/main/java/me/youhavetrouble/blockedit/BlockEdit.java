@@ -1,6 +1,5 @@
 package me.youhavetrouble.blockedit;
 
-import me.youhavetrouble.blockedit.api.BlockEditWands;
 import me.youhavetrouble.blockedit.commands.*;
 import me.youhavetrouble.blockedit.wands.SelectionWand;
 import org.bukkit.command.Command;
@@ -11,16 +10,13 @@ public final class BlockEdit extends JavaPlugin {
     private static BlockEdit plugin;
 
     private static SchematicHandler schematicHandler;
+    private static WandsHandler wandsHandler;
 
     @Override
     public void onEnable() {
         plugin = this;
 
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
-
-        SelectionWand selectionWand = new SelectionWand();
-        BlockEditWands.registerWand(selectionWand);
-        getServer().getPluginManager().registerEvents(selectionWand, this);
 
         registerCommand(new WandCommand());
         registerCommand(new SetCommand());
@@ -33,6 +29,11 @@ public final class BlockEdit extends JavaPlugin {
         registerCommand(new RotateCommand());
 
         schematicHandler = new SchematicHandler(this);
+        wandsHandler = new WandsHandler(this);
+
+        SelectionWand selectionWand = new SelectionWand();
+        wandsHandler.registerWand(selectionWand);
+        getServer().getPluginManager().registerEvents(selectionWand, this);
 
 
     }
@@ -44,6 +45,10 @@ public final class BlockEdit extends JavaPlugin {
 
     public static SchematicHandler getSchematicHandler() {
         return schematicHandler;
+    }
+
+    public static WandsHandler getWandsHandler() {
+        return wandsHandler;
     }
 
     private void registerCommand(Command command) {

@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.UUID;
@@ -44,6 +45,12 @@ public class Selection extends BoundingBox {
 
     public void setWorldUuid(UUID worldUuid) {
         this.worldUuid = worldUuid;
+    }
+
+    @NotNull
+    @Override
+    public Selection clone() {
+        return new Selection(this, worldUuid);
     }
 
     public static Selection fromClipboard(Set<Vector> locations, World world) {

@@ -1,6 +1,6 @@
 package me.youhavetrouble.blockedit.commands;
 
-import me.youhavetrouble.blockedit.api.BlockEditWands;
+import me.youhavetrouble.blockedit.api.BlockEditAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,10 +24,10 @@ public class WandCommand extends Command {
         if (!(commandSender instanceof Player player)) return true;
         ItemStack wand;
         if (args.length == 0) {
-            wand = BlockEditWands.getWand("select");
+            wand = BlockEditAPI.getWandsHandler().getWand("select");
             if (wand == null) return true;
         } else {
-            wand = BlockEditWands.getWand(args[0]);
+            wand = BlockEditAPI.getWandsHandler().getWand(args[0]);
             if (wand == null) {
                 player.sendMessage(Component.text("Could not find wand with id "+args[0]));
                 return true;
@@ -40,7 +40,7 @@ public class WandCommand extends Command {
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1)
-            return StringUtil.copyPartialMatches(args[0], BlockEditWands.getWandIds(), new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[0], BlockEditAPI.getWandsHandler().getWandIds(), new ArrayList<>());
         return new ArrayList<>();
     }
 
