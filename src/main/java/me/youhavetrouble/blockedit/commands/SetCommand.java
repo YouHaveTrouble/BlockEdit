@@ -43,6 +43,7 @@ public class SetCommand extends Command {
             if (split.length == 1) {
                 String datas = blockData.getAsString(false);
                 String[] nameAndDatas = datas.split("\\[");
+                if (nameAndDatas.length != 2) return suggestions;
                 datas = nameAndDatas[1].substring(0, nameAndDatas[1].length()-2);
                 String[] splitDatas = datas.split(",");
                 for (String data : splitDatas) {
