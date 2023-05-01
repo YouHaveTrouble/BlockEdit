@@ -5,6 +5,7 @@ import net.querz.nbt.io.NBTInputStream;
 import net.querz.nbt.io.NamedTag;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.Tag;
+import org.bukkit.block.BlockState;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;
@@ -41,19 +42,7 @@ public class SchematicHandler {
     public Clipboard loadSchematic(String schematicName) {
         File schematicFile = new File(plugin.getDataFolder(), "schematics/" + schematicName + ".schematic");
 
-        try (DataInputStream dis = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new FileInputStream(schematicFile))))) {
-            NamedTag tag = new NBTInputStream(dis).readTag(Tag.DEFAULT_MAX_DEPTH);
 
-            if (tag == null) return null;
-            if (!(tag.getTag() instanceof CompoundTag compoundTag)) return null;
-
-            plugin.getLogger().info(compoundTag.get("Width").toString());
-            plugin.getLogger().info(compoundTag.get("Height").toString());
-            plugin.getLogger().info(compoundTag.get("Length").toString());
-
-        } catch (IOException e) {
-            return null;
-        }
 
         return null;
     }
