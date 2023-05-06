@@ -2,6 +2,9 @@ package me.youhavetrouble.blockedit.commands;
 
 import me.youhavetrouble.blockedit.BEPlayer;
 import me.youhavetrouble.blockedit.api.BlockEditAPI;
+import me.youhavetrouble.blockedit.commands.arguments.BlockDataArgument;
+import me.youhavetrouble.blockedit.commands.arguments.InvalidDataException;
+import me.youhavetrouble.blockedit.commands.arguments.InvalidMaterialException;
 import me.youhavetrouble.blockedit.operations.SetOperation;
 import me.youhavetrouble.blockedit.util.Selection;
 import net.kyori.adventure.text.Component;
@@ -33,37 +36,6 @@ public class SetCommand extends Command {
             }
             return StringUtil.copyPartialMatches(args[0], suggestions, new ArrayList<>());
         }
-        // TODO refactor and/or abstract this
-        if (args.length > 1) {
-            Material material = Material.getMaterial(args[0].toUpperCase());
-            if (material == null) return suggestions;
-            if (!material.isBlock()) return suggestions;
-            BlockData blockData = material.createBlockData();
-            String[] split = args[args.length-1].split("=");
-            if (split.length == 1) {
-                String datas = blockData.getAsString(false);
-                String[] nameAndDatas = datas.split("\\[");
-                if (nameAndDatas.length != 2) return suggestions;
-                datas = nameAndDatas[1].substring(0, nameAndDatas[1].length()-2);
-                String[] splitDatas = datas.split(",");
-                for (String data : splitDatas) {
-                    String[] splitData = data.split("=");
-                    if (splitData.length != 2) continue;
-                    String suggestion = splitData[0]+"=";
-                    boolean alreadyUsed = false;
-                    for (String arg : args) {
-                        if (arg.startsWith(suggestion)) {
-                            alreadyUsed = true;
-                            break;
-                        };
-                    }
-                    if (alreadyUsed) continue;
-                    suggestions.add(suggestion);
-                }
-                return StringUtil.copyPartialMatches(split[0], suggestions, new ArrayList<>());
-            }
-
-        }
         return suggestions;
     }
 
@@ -79,37 +51,29 @@ public class SetCommand extends Command {
             return true;
         }
 
-        if (args.length == 0) {
-            player.sendMessage(Component.text("You need to provide block type"));
-            return true;
+        if (args.length != 1) {
+            return false;
         }
 
         BlockData blockData;
         try {
-            blockData = getBlockData(args);
-        } catch (IllegalArgumentException e) {
+            blockData = BlockDataArgument.getBlockData(args[0]);
+        } catch (InvalidMaterialException e) {
+            player.sendMessage(Component.text("Provided block type does not exist"));
+            return true;
+        } catch (InvalidDataException e) {
             player.sendMessage(Component.text("Provided block data is invalid"));
             return true;
         }
 
-        if (blockData == null) {
-            player.sendMessage(Component.text("Provided material does not exist"));
-            return true;
-        }
-
         BlockEditAPI.runOperation(selection, 1, new SetOperation(blockData));
+        player.sendMessage(Component.text("Setting blocks..."));
         return true;
     }
 
-
-    private BlockData getBlockData(String[] args) throws IllegalArgumentException {
-        ArrayList<String> argsList = new ArrayList<>(List.of(args));
-        if (argsList.size() == 0) return null;
-        Material material = Material.getMaterial(argsList.get(0).toUpperCase());
-        if (material == null) return null;
-        argsList.remove(0);
-        if (argsList.size() == 0) return material.createBlockData();
-        String dataString = "[" + String.join(",", argsList) + "]";
-        return material.createBlockData(dataString);
+    @Override
+    public @NotNull String getUsage() {
+        return "/set <block[block=data]>";
     }
+
 }

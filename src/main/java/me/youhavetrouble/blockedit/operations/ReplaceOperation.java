@@ -8,7 +8,7 @@ public record ReplaceOperation(BlockData blockToReplace, BlockData blockToSet) i
 
     @Override
     public void transformBlock(Block block) {
-        if (block.getBlockData().matches(blockToReplace))
-            block.setBlockData(blockToSet);
+        if (!block.getBlockData().matches(blockToReplace)) return;
+        block.setBlockData(blockToSet);
     }
 }

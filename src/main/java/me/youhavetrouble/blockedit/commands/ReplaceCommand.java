@@ -2,6 +2,9 @@ package me.youhavetrouble.blockedit.commands;
 
 import me.youhavetrouble.blockedit.BEPlayer;
 import me.youhavetrouble.blockedit.api.BlockEditAPI;
+import me.youhavetrouble.blockedit.commands.arguments.BlockDataArgument;
+import me.youhavetrouble.blockedit.commands.arguments.InvalidDataException;
+import me.youhavetrouble.blockedit.commands.arguments.InvalidMaterialException;
 import me.youhavetrouble.blockedit.operations.ReplaceOperation;
 import me.youhavetrouble.blockedit.util.Selection;
 import net.kyori.adventure.text.Component;
@@ -28,8 +31,7 @@ public class ReplaceCommand extends Command {
         if (args.length == 1 || args.length == 2) {
             ArrayList<String> suggestions = new ArrayList<>();
             for (Material material : Material.values()) {
-                if (material.isBlock())
-                    suggestions.add(material.name().toLowerCase());
+                if (material.isBlock()) suggestions.add(material.name().toLowerCase());
             }
             return StringUtil.copyPartialMatches(args[args.length-1], suggestions, new ArrayList<>());
         }
@@ -47,26 +49,39 @@ public class ReplaceCommand extends Command {
             player.sendMessage(Component.text("You need to provide block type to replace"));
             return true;
         }
-        Material materialToReplace = Material.getMaterial(args[1].toUpperCase());
-        if (materialToReplace == null) {
-            player.sendMessage(Component.text("Provided material does not exist"));
+
+        BlockData blockData = null;
+        BlockData blockDataToReplaceWith = null;
+
+        try {
+            blockData = BlockDataArgument.getBlockData(args[0]);
+        } catch (InvalidMaterialException e) {
+            player.sendMessage(Component.text("Provided block type does not exist"));
             return true;
-        }
-        Material material = Material.getMaterial(args[0].toUpperCase());
-        if (material == null) {
-            player.sendMessage(Component.text("Provided material does not exist"));
+        } catch (InvalidDataException e) {
+            player.sendMessage(Component.text("Provided block data is invalid"));
             return true;
         }
 
-        BlockData blockData = material.createBlockData();
-        BlockData blockDataToReplaceWith = materialToReplace.createBlockData();
+        try {
+            blockDataToReplaceWith = BlockDataArgument.getBlockData(args[1]);
+        } catch (InvalidMaterialException e) {
+            player.sendMessage(Component.text("Provided block type does not exist"));
+            return true;
+        } catch (InvalidDataException e) {
+            player.sendMessage(Component.text("Provided block data is invalid"));
+            return true;
+        }
+
         BEPlayer bePlayer = BEPlayer.getByPlayer(player);
         Selection selection = bePlayer.getSelection();
         if (selection == null) {
             player.sendMessage(Component.text("You need to select 2 points to do this"));
             return true;
         }
+
         BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(blockData, blockDataToReplaceWith));
+        player.sendMessage(Component.text("Replacing blocks..."));
         return true;
     }
 }
