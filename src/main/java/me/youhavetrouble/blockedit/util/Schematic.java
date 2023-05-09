@@ -1,23 +1,24 @@
 package me.youhavetrouble.blockedit.util;
 
+import me.youhavetrouble.blockedit.commands.arguments.BlockDataArgument;
 import me.youhavetrouble.blockedit.exception.SchematicLoadException;
 import net.querz.nbt.io.NBTInputStream;
 import net.querz.nbt.io.NamedTag;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.Tag;
-import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 
 import java.io.*;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class Schematic {
 
     private final short width, height, length;
-    private final int[] palette;
     private final int bitsPerBlock;
     private final byte[] blocks;
 
-    private BlockState[] blockPalette = new BlockState[0];
+    private BlockData[] blockPalette = new BlockData[0];
 
     public Schematic(File file) throws SchematicLoadException {
         try (DataInputStream dis = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new FileInputStream(file))))) {
@@ -30,13 +31,21 @@ public class Schematic {
             this.height = compoundTag.getShort("Height");
             this.length = compoundTag.getShort("Length");
 
-            this.palette = compoundTag.getIntArray("Palette");
+            CompoundTag paletteMap = compoundTag.getCompoundTag("Palette");
             this.blocks = compoundTag.getByteArray("BlockData");
             this.bitsPerBlock = blocks.length >> 6;
 
-            if (this.palette.length > 0) {
-                this.blockPalette = new BlockState[this.palette.length];
+            if (paletteMap.size() > 0) {
+                this.blockPalette = new BlockData[paletteMap.size()];
+            }
 
+            for (String key : paletteMap.keySet()) {
+                int index = paletteMap.getInt(key);
+                String[] split = key.split(":");
+                if (split.length == 2) {
+                    key = split[1];
+                }
+                this.blockPalette[index] = BlockDataArgument.getBlockData(key);
             }
 
         } catch (IOException e) {
@@ -54,5 +63,9 @@ public class Schematic {
 
     public short getLength() {
         return length;
+    }
+
+    public List<BlockData> getBlockPalette() {
+        return List.of(blockPalette);
     }
 }

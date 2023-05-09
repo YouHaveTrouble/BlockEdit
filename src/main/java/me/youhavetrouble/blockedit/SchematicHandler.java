@@ -1,14 +1,9 @@
 package me.youhavetrouble.blockedit;
 
 import me.youhavetrouble.blockedit.util.Clipboard;
-import net.querz.nbt.io.NBTInputStream;
-import net.querz.nbt.io.NamedTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.Tag;
-import org.bukkit.block.BlockState;
+import me.youhavetrouble.blockedit.util.Schematic;
 
 import java.io.*;
-import java.util.zip.GZIPInputStream;
 
 public class SchematicHandler {
 
@@ -41,7 +36,13 @@ public class SchematicHandler {
      */
     public Clipboard loadSchematic(String schematicName) {
         File schematicFile = new File(plugin.getDataFolder(), "schematics/" + schematicName + ".schematic");
-
+        if (!schematicFile.exists()) {
+            schematicFile = new File(plugin.getDataFolder(), "schematics/" + schematicName + ".schem");
+        }
+        if (!schematicFile.exists()) {
+            return null;
+        }
+        Schematic schematic = new Schematic(schematicFile);
 
 
         return null;
