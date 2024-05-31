@@ -46,7 +46,7 @@ public class WorkSplitter {
                     processChunkWork(chunkWork, sel, operation);
                 });
             }
-        }), 0, 1);
+        }), 1, 1);
 
     }
 
