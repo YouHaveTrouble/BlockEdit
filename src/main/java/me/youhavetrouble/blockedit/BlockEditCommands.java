@@ -277,7 +277,7 @@ public class BlockEditCommands {
 
                                     Selection selection = bePlayer.getSelection();
 
-                                    BlockEditAPI.runOperation(selection, 1, new SetOperation(blockState.getBlockData()));
+                                    BlockEditAPI.runOperation(selection, 1, new SetOperation(blockState));
                                     player.sendMessage(Component.text("Setting blocks..."));
 
                                     return Command.SINGLE_SUCCESS;
@@ -308,7 +308,7 @@ public class BlockEditCommands {
 
                                             Selection selection = bePlayer.getSelection();
 
-                                            BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(toReplace.getBlockData(), replaceWith.getBlockData()));
+                                            BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(toReplace.getBlockData(), replaceWith));
                                             player.sendMessage(Component.text("Replacing blocks..."));
 
                                             return Command.SINGLE_SUCCESS;

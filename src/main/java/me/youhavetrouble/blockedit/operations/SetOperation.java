@@ -2,12 +2,14 @@ package me.youhavetrouble.blockedit.operations;
 
 import me.youhavetrouble.blockedit.api.BlockEditOperation;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
+import org.bukkit.block.BlockState;
 
-public record SetOperation(BlockData blockData) implements BlockEditOperation {
+@SuppressWarnings("UnstableApiUsage")
+public record SetOperation(BlockState blockToSet) implements BlockEditOperation {
 
     @Override
     public void transformBlock(Block block) {
-        block.setBlockData(blockData);
+        BlockState newState = blockToSet.copy(block.getLocation());
+        newState.update(true, false);
     }
 }
