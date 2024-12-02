@@ -17,12 +17,15 @@ public class WorkSplitter {
 
     protected static HashSet<ChunkWork> getOperatedOnChunks(BoundingBox boundingBox) {
         HashSet<ChunkWork> chunks = new HashSet<>();
+        int minChunkX = (int) Math.floor(boundingBox.getMinX()) >> 4;
+        int maxChunkX = (int) Math.floor(boundingBox.getMaxX()) >> 4;
+        int minChunkZ = (int) Math.floor(boundingBox.getMinZ()) >> 4;
+        int maxChunkZ = (int) Math.floor(boundingBox.getMaxZ()) >> 4;
+
         ChunkWork chunkWork = new ChunkWork(0,0);
-        // TODO Find a way to get chunks in the selection more efficiently
-        for (double x = boundingBox.getMinX(); x <= boundingBox.getMaxX(); x++) {
-            for (double z = boundingBox.getMinZ(); z <= boundingBox.getMaxZ(); z++) {
-                chunkWork.setCoords(x,z);
-                if (chunks.contains(chunkWork)) continue;
+        for (int x = minChunkX; x <= maxChunkX; x++) {
+            for (int z = minChunkZ; z <= maxChunkZ; z++) {
+                chunkWork.setCoords(x << 4, z << 4);
                 chunks.add(chunkWork.clone());
             }
         }
