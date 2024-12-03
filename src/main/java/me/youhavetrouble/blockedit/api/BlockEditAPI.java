@@ -7,7 +7,7 @@ import me.youhavetrouble.blockedit.util.ChunkWork;
 import me.youhavetrouble.blockedit.util.Selection;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
+import java.util.Set;
 
 public class BlockEditAPI {
 
@@ -17,13 +17,13 @@ public class BlockEditAPI {
      * @param chunksPerTick Amount of chunks per tick to modify
      * @param operation Operation to execute
      */
-    public static void runOperation(
+    public static OperationWork runOperation(
             @NotNull Selection selection,
             int chunksPerTick,
             @NotNull BlockEditOperation operation
     ) {
-        HashSet<ChunkWork> work = WorkSplitter.getOperatedOnChunks(selection);
-        WorkSplitter.runOperation(work, selection, chunksPerTick, operation);
+        Set<ChunkWork> work = WorkSplitter.getOperatedOnChunks(selection);
+        return WorkSplitter.runOperation(work, selection, chunksPerTick, operation);
     }
 
     /**

@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -27,18 +28,22 @@ public class Selection extends BoundingBox {
         this.worldUuid = worldUuid;
     }
 
+    @Nullable
     public Location getSelectionPoint1() {
         return selectionPoint1;
     }
 
+    @Nullable
     public Location getSelectionPoint2() {
         return selectionPoint2;
     }
 
+    @Nullable
     public World getWorld() {
         return Bukkit.getWorld(worldUuid);
     }
 
+    @NotNull
     public UUID getWorldUuid() {
         return worldUuid;
     }
