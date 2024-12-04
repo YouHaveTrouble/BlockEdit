@@ -2,6 +2,7 @@ package me.youhavetrouble.blockedit;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -101,10 +102,7 @@ public class BlockEditCommands {
                                     return builder.buildFuture();
                                 })
                                 .executes(ctx -> {
-                                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                                        return Command.SINGLE_SUCCESS;
-                                    }
+                                    Player player = (Player) ctx.getSource().getSender();
                                     String wandId = ctx.getArgument("wand_id", String.class);
                                     ItemStack wand = BlockEditAPI.getWandsHandler().getWand(wandId);
                                     if (wand == null) {
@@ -116,10 +114,7 @@ public class BlockEditCommands {
                                 })
                 )
                 .executes(ctx -> {
-                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                        return Command.SINGLE_SUCCESS;
-                    }
+                    Player player = (Player) ctx.getSource().getSender();
                     ItemStack wand = BlockEditAPI.getWandsHandler().getWand("select");
                     player.getInventory().addItem(wand);
                     return Command.SINGLE_SUCCESS;
@@ -134,10 +129,7 @@ public class BlockEditCommands {
                     return player.hasPermission("blockedit.command.copy");
                 })
                 .executes(ctx -> {
-                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                        return Command.SINGLE_SUCCESS;
-                    }
+                    Player player = (Player) ctx.getSource().getSender();
                     BEPlayer bePlayer = BEPlayer.getByPlayer(player);
                     try {
                         bePlayer.setClipboardFromSelection();
@@ -157,10 +149,7 @@ public class BlockEditCommands {
                     return player.hasPermission("blockedit.command.desel");
                 })
                 .executes(ctx -> {
-                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                        return Command.SINGLE_SUCCESS;
-                    }
+                    Player player = (Player) ctx.getSource().getSender();
                     BEPlayer.getByPlayer(player).resetSelection();
                     player.sendMessage(Component.text("You have reset your selection"));
                     return Command.SINGLE_SUCCESS;
@@ -175,10 +164,7 @@ public class BlockEditCommands {
                     return player.hasPermission("blockedit.command.pos");
                 })
                 .executes(ctx -> {
-                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                        return Command.SINGLE_SUCCESS;
-                    }
+                    Player player = (Player) ctx.getSource().getSender();
                     BEPlayer.getByPlayer(player).setSelectionPoint1(player.getLocation().toBlockLocation());
                     player.sendMessage(Component.text("First point set at your location"));
                     return Command.SINGLE_SUCCESS;
@@ -193,10 +179,7 @@ public class BlockEditCommands {
                     return player.hasPermission("blockedit.command.pos");
                 })
                 .executes(ctx -> {
-                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                        return Command.SINGLE_SUCCESS;
-                    }
+                    Player player = (Player) ctx.getSource().getSender();
                     BEPlayer.getByPlayer(player).setSelectionPoint2(player.getLocation().toBlockLocation());
                     player.sendMessage(Component.text("Second point set at your location"));
                     return Command.SINGLE_SUCCESS;
@@ -211,10 +194,7 @@ public class BlockEditCommands {
                     return player.hasPermission("blockedit.command.paste");
                 })
                 .executes(ctx -> {
-                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                        return Command.SINGLE_SUCCESS;
-                    }
+                    Player player = (Player) ctx.getSource().getSender();
                     BEPlayer bePlayer = BEPlayer.getByPlayer(player);
                     Vector playerLocationVector = player.getLocation().toBlockLocation().toVector();
 
@@ -243,10 +223,7 @@ public class BlockEditCommands {
                 .then(
                         Commands.argument("angle", DoubleArgumentType.doubleArg(-360, 360))
                                 .executes(ctx -> {
-                                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                                        return Command.SINGLE_SUCCESS;
-                                    }
+                                    Player player = (Player) ctx.getSource().getSender();
                                     double angle = ctx.getArgument("angle", Double.class);
                                     BEPlayer bePlayer = BEPlayer.getByPlayer(player);
                                     bePlayer.getClipboard().rotate(angle);
@@ -264,25 +241,29 @@ public class BlockEditCommands {
                     return player.hasPermission("blockedit.command.set");
                 })
                 .then(
-                        // TODO replace with better way to provide block data, possibly multiple arguments
                         Commands.argument("block", ArgumentTypes.blockState())
                                 .executes(ctx -> {
-                                    if (!(ctx.getSource().getSender() instanceof Player player)) {
-                                        ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                                        return Command.SINGLE_SUCCESS;
-                                    }
-
+                                    Player player = (Player) ctx.getSource().getSender();
                                     BEPlayer bePlayer = BEPlayer.getByPlayer(player);
                                     BlockState blockState = ctx.getArgument("block", BlockState.class);
-
                                     Selection selection = bePlayer.getSelection();
-
                                     BlockEditAPI.runOperation(selection, 1, new SetOperation(blockState));
                                     player.sendMessage(Component.text("Setting blocks..."));
-
                                     return Command.SINGLE_SUCCESS;
                                 })
                 )
+                .then(
+                        Commands.argument("chunks_per_tick", IntegerArgumentType.integer(1))
+                                .executes(ctx -> {
+                                    Player player = (Player) ctx.getSource().getSender();
+                                    BEPlayer bePlayer = BEPlayer.getByPlayer(player);
+                                    BlockState blockState = ctx.getArgument("block", BlockState.class);
+                                    int chunksPerTick = ctx.getArgument("chunks_per_tick", Integer.class);
+                                    Selection selection = bePlayer.getSelection();
+                                    BlockEditAPI.runOperation(selection, chunksPerTick, new SetOperation(blockState));
+                                    player.sendMessage(Component.text("Setting blocks..."));
+                                    return Command.SINGLE_SUCCESS;
+                                }))
                 .build();
     }
 
@@ -293,28 +274,34 @@ public class BlockEditCommands {
                     return player.hasPermission("blockedit.command.replace");
                 })
                 .then(
-                        // TODO replace with better way to provide block data, possibly multiple arguments
                         Commands.argument("to_replace", ArgumentTypes.blockState())
-                                .then(Commands.argument("replace_with", ArgumentTypes.blockState())
-                                        .executes(ctx -> {
-                                            if (!(ctx.getSource().getSender() instanceof Player player)) {
-                                                ctx.getSource().getSender().sendMessage(Component.text("Only players can use this command", NamedTextColor.RED));
-                                                return Command.SINGLE_SUCCESS;
-                                            }
-
-                                            BEPlayer bePlayer = BEPlayer.getByPlayer(player);
-                                            BlockState toReplace = ctx.getArgument("to_replace", BlockState.class);
-                                            BlockState replaceWith = ctx.getArgument("replace_with", BlockState.class);
-
-                                            Selection selection = bePlayer.getSelection();
-
-                                            BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(toReplace.getBlockData(), replaceWith));
-                                            player.sendMessage(Component.text("Replacing blocks..."));
-
-                                            return Command.SINGLE_SUCCESS;
-                                        })
-                                )
-
+                )
+                .then(
+                        Commands.argument("replace_with", ArgumentTypes.blockState())
+                                .executes(ctx -> {
+                                    Player player = (Player) ctx.getSource().getSender();
+                                    BEPlayer bePlayer = BEPlayer.getByPlayer(player);
+                                    BlockState toReplace = ctx.getArgument("to_replace", BlockState.class);
+                                    BlockState replaceWith = ctx.getArgument("replace_with", BlockState.class);
+                                    Selection selection = bePlayer.getSelection();
+                                    BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(toReplace, replaceWith));
+                                    player.sendMessage(Component.text("Replacing blocks..."));
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                )
+                .then(
+                        Commands.argument("chunks_per_tick", IntegerArgumentType.integer(1))
+                                .executes(ctx -> {
+                                    Player player = (Player) ctx.getSource().getSender();
+                                    BEPlayer bePlayer = BEPlayer.getByPlayer(player);
+                                    BlockState toReplace = ctx.getArgument("to_replace", BlockState.class);
+                                    BlockState replaceWith = ctx.getArgument("replace_with", BlockState.class);
+                                    int chunksPerTick = ctx.getArgument("chunks_per_tick", Integer.class);
+                                    Selection selection = bePlayer.getSelection();
+                                    BlockEditAPI.runOperation(selection, chunksPerTick, new ReplaceOperation(toReplace, replaceWith));
+                                    player.sendMessage(Component.text("Replacing blocks..."));
+                                    return Command.SINGLE_SUCCESS;
+                                })
                 )
                 .build();
     }
