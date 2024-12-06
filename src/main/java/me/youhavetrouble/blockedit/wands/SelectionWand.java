@@ -1,10 +1,13 @@
 package me.youhavetrouble.blockedit.wands;
 
+import me.youhavetrouble.blockedit.BELocale;
 import me.youhavetrouble.blockedit.BEPlayer;
 import me.youhavetrouble.blockedit.api.BlockEditAPI;
 import me.youhavetrouble.blockedit.api.BlockEditWand;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SelectionWand implements Listener, BlockEditWand {
 
     @Override
@@ -47,14 +51,18 @@ public class SelectionWand implements Listener, BlockEditWand {
         Action action = event.getAction();
         if (action.equals(Action.LEFT_CLICK_BLOCK)) {
             event.setCancelled(true);
-            BEPlayer.getByPlayer(player).setSelectionPoint1(block.getLocation());
-            player.sendMessage(Component.text("First point set"));
+            Location location = block.getLocation();
+            BEPlayer.getByPlayer(player).setSelectionPoint1(location);
+            String locationString = "X: " + location.blockX() + " Y: " + location.blockY() + " Z: " + location.blockZ();
+            player.sendMessage(Component.text(BELocale.getLocale(player.locale()).firstPositionSet.formatted(locationString), NamedTextColor.GRAY));
             return;
         }
         if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
             event.setCancelled(true);
-            BEPlayer.getByPlayer(player).setSelectionPoint2(block.getLocation());
-            player.sendMessage(Component.text("Second point set"));
+            Location location = block.getLocation();
+            BEPlayer.getByPlayer(player).setSelectionPoint2(location);
+            String locationString = "X: " + location.blockX() + " Y: " + location.blockY() + " Z: " + location.blockZ();
+            player.sendMessage(Component.text(BELocale.getLocale(player.locale()).secondPositionSet.formatted(locationString), NamedTextColor.GRAY));
             return;
         }
     }

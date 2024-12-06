@@ -5,10 +5,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import me.youhavetrouble.blockedit.wands.SelectionWand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 
 import java.io.*;
-import java.util.List;
-import java.util.Locale;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class BlockEdit extends JavaPlugin {
 
@@ -51,37 +55,33 @@ public final class BlockEdit extends JavaPlugin {
     }
 
     private boolean initLocales() {
-        List<String> localeFiles;
-        try (InputStream in = BlockEdit.class.getClassLoader().getResourceAsStream("locale");
-             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-            localeFiles = br.lines().toList();
-        } catch (IOException e) {
-            plugin.getSLF4JLogger().error("Error loading locale files", e);
-            return false;
-        }
+        Reflections reflections = new Reflections("locale", Scanners.Resources);
+        Set<String> fileNames = reflections.getResources(Pattern.compile("([a-zA-Z]{1,3}_[a-zA-Z]{1,3})(\\.json)"));
 
         Gson gson = new Gson();
-        for (String fileName : localeFiles) {
+        for (String fileName : fileNames) {
             Locale locale;
             try {
-                String localeString = fileName.replace(".json", "");
-                String[] split = localeString.split("_");
-                if (split.length == 1) {
-                    locale = Locale.of(split[0]);
-                } else {
-                    locale = Locale.of(split[0], split[1]);
-                }
+                String localeString = fileName
+                        .replace(".json", "")
+                        .replace("locale/", "");
+                locale = Locale.of(localeString);
             } catch (IllegalArgumentException e) {
                 plugin.getSLF4JLogger().error("Invalid locale file name: {}", fileName);
                 continue;
             }
-            try (InputStream fileStream = BlockEdit.class.getClassLoader().getResourceAsStream("locale/" + fileName);
-                JsonReader reader = new JsonReader(new InputStreamReader(fileStream))) {
+            String resourcePath = "/" + fileName;
+            try (InputStream fileStream = BlockEdit.class.getResourceAsStream(resourcePath)) {
+                if (fileStream == null) {
+                    plugin.getSLF4JLogger().error("Locale file not found: {}", resourcePath);
+                    continue;
+                }
+                JsonReader reader = new JsonReader(new InputStreamReader(fileStream));
                 JsonObject json = gson.fromJson(reader, JsonObject.class);
                 BELocale beLocale = new BELocale(json);
                 BELocale.registerLocale(locale, beLocale);
             } catch (IOException e) {
-                plugin.getSLF4JLogger().error("Error reading locale file: {}", fileName, e);
+                plugin.getSLF4JLogger().error("Error reading locale file: {}", resourcePath, e);
             }
         }
         return true;

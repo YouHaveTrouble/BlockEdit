@@ -17,6 +17,7 @@ import me.youhavetrouble.blockedit.operations.SetOperation;
 import me.youhavetrouble.blockedit.util.Selection;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -80,7 +81,6 @@ public class BlockEditCommands {
             );
 
         });
-
     }
 
     private static LiteralCommandNode<CommandSourceStack> wandCommand() {
@@ -106,7 +106,8 @@ public class BlockEditCommands {
                                     String wandId = ctx.getArgument("wand_id", String.class);
                                     ItemStack wand = BlockEditAPI.getWandsHandler().getWand(wandId);
                                     if (wand == null) {
-                                        ctx.getSource().getSender().sendMessage(Component.text("Could not find wand with id %s".formatted(wandId), NamedTextColor.RED));
+                                        BlockEdit.getPlugin().getSLF4JLogger().info(String.valueOf(player.locale()));
+                                        ctx.getSource().getSender().sendMessage(Component.text(BELocale.getLocale(player.locale()).couldNotFindWandById.formatted(wandId), NamedTextColor.RED));
                                         return Command.SINGLE_SUCCESS;
                                     }
                                     player.getInventory().addItem(wand);
@@ -133,9 +134,9 @@ public class BlockEditCommands {
                     BEPlayer bePlayer = BEPlayer.getByPlayer(player);
                     try {
                         bePlayer.setClipboardFromSelection();
-                        player.sendMessage(Component.text("Copied selection to clipboard"));
+                        player.sendMessage(Component.text(BELocale.getLocale(player.locale()).copiedSelectionToClipboard, NamedTextColor.GRAY));
                     } catch (IllegalStateException e) {
-                        player.sendMessage(Component.text("You need to select an area first"));
+                        player.sendMessage(Component.text(BELocale.getLocale(player.locale()).selectArea, NamedTextColor.RED));
                     }
                     return Command.SINGLE_SUCCESS;
                 })
@@ -151,7 +152,7 @@ public class BlockEditCommands {
                 .executes(ctx -> {
                     Player player = (Player) ctx.getSource().getSender();
                     BEPlayer.getByPlayer(player).resetSelection();
-                    player.sendMessage(Component.text("You have reset your selection"));
+                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).selectionReset, NamedTextColor.GRAY));
                     return Command.SINGLE_SUCCESS;
                 })
                 .build();
@@ -165,8 +166,10 @@ public class BlockEditCommands {
                 })
                 .executes(ctx -> {
                     Player player = (Player) ctx.getSource().getSender();
-                    BEPlayer.getByPlayer(player).setSelectionPoint1(player.getLocation().toBlockLocation());
-                    player.sendMessage(Component.text("First point set at your location"));
+                    Location location = player.getLocation().toBlockLocation();
+                    BEPlayer.getByPlayer(player).setSelectionPoint1(location);
+                    String locationString = "X: " + location.blockX() + " Y: " + location.blockY() + " Z: " + location.blockZ();
+                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).firstPositionSet.formatted(locationString), NamedTextColor.GRAY));
                     return Command.SINGLE_SUCCESS;
                 })
                 .build();
@@ -180,8 +183,10 @@ public class BlockEditCommands {
                 })
                 .executes(ctx -> {
                     Player player = (Player) ctx.getSource().getSender();
-                    BEPlayer.getByPlayer(player).setSelectionPoint2(player.getLocation().toBlockLocation());
-                    player.sendMessage(Component.text("Second point set at your location"));
+                    Location location = player.getLocation().toBlockLocation();
+                    BEPlayer.getByPlayer(player).setSelectionPoint2(location);
+                    String locationString = "X: " + location.blockX() + " Y: " + location.blockY() + " Z: " + location.blockZ();
+                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).secondPositionSet.formatted(locationString), NamedTextColor.GRAY));
                     return Command.SINGLE_SUCCESS;
                 })
                 .build();
@@ -207,7 +212,7 @@ public class BlockEditCommands {
 
                     Selection selection = Selection.fromClipboard(absoluteBlocks.keySet(), player.getWorld());
                     BlockEditAPI.runOperation(selection, 1, new PasteOperation(absoluteBlocks));
-                    player.sendMessage(Component.text("Pasting clipboard..."));
+                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).pastingClipboard, NamedTextColor.GRAY));
 
                     return Command.SINGLE_SUCCESS;
                 })
@@ -227,7 +232,7 @@ public class BlockEditCommands {
                                     double angle = ctx.getArgument("angle", Double.class);
                                     BEPlayer bePlayer = BEPlayer.getByPlayer(player);
                                     bePlayer.getClipboard().rotate(angle);
-                                    player.sendMessage(Component.text("Rotated clipboard by " + angle + " degrees"));
+                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).clipboardRotated.formatted(angle), NamedTextColor.GRAY));
                                     return Command.SINGLE_SUCCESS;
                                 })
                 )
@@ -248,7 +253,7 @@ public class BlockEditCommands {
                                     BlockState blockState = ctx.getArgument("block", BlockState.class);
                                     Selection selection = bePlayer.getSelection();
                                     BlockEditAPI.runOperation(selection, 1, new SetOperation(blockState));
-                                    player.sendMessage(Component.text("Setting blocks..."));
+                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).settingBlocks, NamedTextColor.GRAY));
                                     return Command.SINGLE_SUCCESS;
                                 })
                 )
@@ -261,7 +266,7 @@ public class BlockEditCommands {
                                     int chunksPerTick = ctx.getArgument("chunks_per_tick", Integer.class);
                                     Selection selection = bePlayer.getSelection();
                                     BlockEditAPI.runOperation(selection, chunksPerTick, new SetOperation(blockState));
-                                    player.sendMessage(Component.text("Setting blocks..."));
+                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).settingBlocks, NamedTextColor.GRAY));
                                     return Command.SINGLE_SUCCESS;
                                 }))
                 .build();
@@ -285,7 +290,7 @@ public class BlockEditCommands {
                                     BlockState replaceWith = ctx.getArgument("replace_with", BlockState.class);
                                     Selection selection = bePlayer.getSelection();
                                     BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(toReplace, replaceWith));
-                                    player.sendMessage(Component.text("Replacing blocks..."));
+                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).replacingBlocks, NamedTextColor.GRAY));
                                     return Command.SINGLE_SUCCESS;
                                 })
                 )
@@ -299,7 +304,7 @@ public class BlockEditCommands {
                                     int chunksPerTick = ctx.getArgument("chunks_per_tick", Integer.class);
                                     Selection selection = bePlayer.getSelection();
                                     BlockEditAPI.runOperation(selection, chunksPerTick, new ReplaceOperation(toReplace, replaceWith));
-                                    player.sendMessage(Component.text("Replacing blocks..."));
+                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).replacingBlocks, NamedTextColor.GRAY));
                                     return Command.SINGLE_SUCCESS;
                                 })
                 )

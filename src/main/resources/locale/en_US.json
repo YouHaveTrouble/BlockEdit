@@ -1,0 +1,12 @@
+{
+  "could_not_find_wand_by_id": "Could not find wand with id %s",
+  "select_area": "You need to select an area first",
+  "copied_selection_to_clipboard": "Copied selection to clipboard",
+  "selection_reset": "You have reset your selection",
+  "first_position_set": "First position set to %s",
+  "second_position_set": "Second position set to %s",
+  "pasting_clipboard": "Pasting clipboard...",
+  "clipboard_rotated": "Clipboard rotated %s degrees",
+  "setting_blocks": "Setting blocks...",
+  "replacing_blocks": "Replacing blocks..."
+}
