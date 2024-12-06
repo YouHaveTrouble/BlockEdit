@@ -52,6 +52,11 @@ public class OperationWork {
             }
             for (int i = 0; i < chunksPerTick; i++) {
                 int chunkWorkIndex = chunksLeft.getAndDecrement();
+                if (chunkWorkIndex < 0) {
+                    this.finished = true;
+                    task.cancel();
+                    return;
+                }
                 ChunkWork chunkWork = chunkWorkList.get(chunkWorkIndex);
                 World world = selection.getWorld();
                 if (world == null) return;
