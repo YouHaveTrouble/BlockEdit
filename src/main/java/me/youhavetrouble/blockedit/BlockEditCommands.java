@@ -216,6 +216,29 @@ public class BlockEditCommands {
 
                     return Command.SINGLE_SUCCESS;
                 })
+                .then(
+                        Commands.argument("chunks_per_tick", IntegerArgumentType.integer(1))
+                                .executes(ctx -> {
+                                    Player player = (Player) ctx.getSource().getSender();
+                                    BEPlayer bePlayer = BEPlayer.getByPlayer(player);
+                                    Vector playerLocationVector = player.getLocation().toBlockLocation().toVector();
+
+                                    HashMap<Vector, BlockState> absoluteBlocks = new HashMap<>(bePlayer.getClipboard().getBlocks().size());
+
+                                    int chunksPerTick = ctx.getArgument("chunks_per_tick", Integer.class);
+
+                                    bePlayer.getClipboard().getBlocks().forEach((vector, blockState) -> {
+                                        Vector absolutePosition = vector.clone().add(playerLocationVector);
+                                        absoluteBlocks.put(absolutePosition, blockState);
+                                    });
+
+                                    Selection selection = Selection.fromClipboard(absoluteBlocks.keySet(), player.getWorld());
+                                    BlockEditAPI.runOperation(selection, chunksPerTick, new PasteOperation(absoluteBlocks));
+                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).pastingClipboard, NamedTextColor.GRAY));
+
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                )
                 .build();
     }
 
