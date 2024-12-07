@@ -1,0 +1,12 @@
+{
+  "could_not_find_wand_by_id": "Nie znaleziono różdźki o id %s",
+  "select_area": "Musisz najpierw wybrać obszar",
+  "copied_selection_to_clipboard": "Skopiowano zaznaczenie do schowka",
+  "selection_reset": "Zresetowałeś swoje zaznaczenie",
+  "first_position_set": "Pierwsza pozycja ustawiona na %s",
+  "second_position_set": "Druga pozycja ustawiona na %s",
+  "pasting_clipboard": "Wklejanie ze schowka...",
+  "clipboard_rotated": "Schowek obrócony o %s stopni",
+  "setting_blocks": "Ustawianie bloków...",
+  "replacing_blocks": "Zastępowanie bloków..."
+}
