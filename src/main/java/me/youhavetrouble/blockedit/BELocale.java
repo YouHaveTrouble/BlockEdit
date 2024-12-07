@@ -17,7 +17,6 @@ public class BELocale {
 
 
     protected BELocale(JsonObject json) {
-        BlockEdit.getPlugin().getSLF4JLogger().info(json.toString());
         couldNotFindWandById = json.get("could_not_find_wand_by_id").getAsString();
         selectArea = json.get("select_area").getAsString();
         copiedSelectionToClipboard = json.get("copied_selection_to_clipboard").getAsString();

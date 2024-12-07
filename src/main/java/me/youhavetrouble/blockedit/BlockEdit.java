@@ -9,10 +9,8 @@ import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public final class BlockEdit extends JavaPlugin {
 
@@ -65,7 +63,11 @@ public final class BlockEdit extends JavaPlugin {
                 String localeString = fileName
                         .replace(".json", "")
                         .replace("locale/", "");
-                locale = Locale.of(localeString);
+                String[] localeStringSplit = localeString.split("_");
+                if (localeStringSplit.length != 2) {
+                    throw new IllegalArgumentException("Invalid locale file name: " + fileName);
+                }
+                locale = Locale.of(localeStringSplit[0], localeStringSplit[1].toUpperCase());
             } catch (IllegalArgumentException e) {
                 plugin.getSLF4JLogger().error("Invalid locale file name: {}", fileName);
                 continue;

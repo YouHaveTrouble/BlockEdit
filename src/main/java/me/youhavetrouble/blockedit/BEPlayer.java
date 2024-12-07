@@ -50,7 +50,6 @@ public class BEPlayer {
                 }
             }
         }
-
     }
 
     public void resetSelection() {
