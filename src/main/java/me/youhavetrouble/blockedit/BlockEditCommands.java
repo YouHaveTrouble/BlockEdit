@@ -333,42 +333,43 @@ public class BlockEditCommands {
                 })
                 .then(
                         Commands.argument("to_replace", ArgumentTypes.blockState())
-                )
-                .then(
-                        Commands.argument("replace_with", ArgumentTypes.blockState())
-                                .executes(ctx -> {
-                                    Player player = (Player) ctx.getSource().getSender();
-                                    BEPlayer bePlayer = BEPlayer.getByPlayer(player);
-                                    BlockState toReplace = ctx.getArgument("to_replace", BlockState.class);
-                                    BlockState replaceWith = ctx.getArgument("replace_with", BlockState.class);
-                                    Selection selection = bePlayer.getSelection();
-                                    if (selection == null) {
-                                        player.sendMessage(Component.text(BELocale.getLocale(player.locale()).selectArea, NamedTextColor.RED));
-                                        return Command.SINGLE_SUCCESS;
-                                    }
-                                    BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(toReplace, replaceWith));
-                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).replacingBlocks, NamedTextColor.GRAY));
-                                    return Command.SINGLE_SUCCESS;
-                                })
                                 .then(
-                                        Commands.argument("chunks_per_tick", IntegerArgumentType.integer(1))
+                                        Commands.argument("replace_with", ArgumentTypes.blockState())
                                                 .executes(ctx -> {
                                                     Player player = (Player) ctx.getSource().getSender();
                                                     BEPlayer bePlayer = BEPlayer.getByPlayer(player);
                                                     BlockState toReplace = ctx.getArgument("to_replace", BlockState.class);
                                                     BlockState replaceWith = ctx.getArgument("replace_with", BlockState.class);
-                                                    int chunksPerTick = ctx.getArgument("chunks_per_tick", Integer.class);
                                                     Selection selection = bePlayer.getSelection();
                                                     if (selection == null) {
                                                         player.sendMessage(Component.text(BELocale.getLocale(player.locale()).selectArea, NamedTextColor.RED));
                                                         return Command.SINGLE_SUCCESS;
                                                     }
-                                                    BlockEditAPI.runOperation(selection, chunksPerTick, new ReplaceOperation(toReplace, replaceWith));
+                                                    BlockEditAPI.runOperation(selection, 1, new ReplaceOperation(toReplace, replaceWith));
                                                     player.sendMessage(Component.text(BELocale.getLocale(player.locale()).replacingBlocks, NamedTextColor.GRAY));
                                                     return Command.SINGLE_SUCCESS;
                                                 })
+                                                .then(
+                                                        Commands.argument("chunks_per_tick", IntegerArgumentType.integer(1))
+                                                                .executes(ctx -> {
+                                                                    Player player = (Player) ctx.getSource().getSender();
+                                                                    BEPlayer bePlayer = BEPlayer.getByPlayer(player);
+                                                                    BlockState toReplace = ctx.getArgument("to_replace", BlockState.class);
+                                                                    BlockState replaceWith = ctx.getArgument("replace_with", BlockState.class);
+                                                                    int chunksPerTick = ctx.getArgument("chunks_per_tick", Integer.class);
+                                                                    Selection selection = bePlayer.getSelection();
+                                                                    if (selection == null) {
+                                                                        player.sendMessage(Component.text(BELocale.getLocale(player.locale()).selectArea, NamedTextColor.RED));
+                                                                        return Command.SINGLE_SUCCESS;
+                                                                    }
+                                                                    BlockEditAPI.runOperation(selection, chunksPerTick, new ReplaceOperation(toReplace, replaceWith));
+                                                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).replacingBlocks, NamedTextColor.GRAY));
+                                                                    return Command.SINGLE_SUCCESS;
+                                                                })
+                                                )
                                 )
                 )
+
                 .build();
     }
 
