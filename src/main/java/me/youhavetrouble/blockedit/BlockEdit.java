@@ -3,6 +3,7 @@ package me.youhavetrouble.blockedit;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
+import me.youhavetrouble.blockedit.schematic.Schematic;
 import me.youhavetrouble.blockedit.wands.SelectionWand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
 public final class BlockEdit extends JavaPlugin {
 
     private static BlockEdit plugin;
-    private static SchematicHandler schematicHandler;
+    private static SchematicHandler<? extends Schematic> schematicHandler;
     private static WandsHandler wandsHandler;
 
     @Override
@@ -30,7 +31,7 @@ public final class BlockEdit extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
 
-        schematicHandler = new SchematicHandler(this);
+        schematicHandler = new SchematicHandler<>(this);
         wandsHandler = new WandsHandler(this);
 
         SelectionWand selectionWand = new SelectionWand();
@@ -44,7 +45,7 @@ public final class BlockEdit extends JavaPlugin {
         return plugin;
     }
 
-    public static SchematicHandler getSchematicHandler() {
+    public static SchematicHandler<? extends Schematic> getSchematicHandler() {
         return schematicHandler;
     }
 

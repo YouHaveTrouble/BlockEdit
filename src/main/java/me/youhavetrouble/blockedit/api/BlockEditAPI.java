@@ -3,6 +3,7 @@ package me.youhavetrouble.blockedit.api;
 import me.youhavetrouble.blockedit.BlockEdit;
 import me.youhavetrouble.blockedit.SchematicHandler;
 import me.youhavetrouble.blockedit.WandsHandler;
+import me.youhavetrouble.blockedit.schematic.Schematic;
 import me.youhavetrouble.blockedit.util.ChunkWork;
 import me.youhavetrouble.blockedit.util.Selection;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,8 @@ public class BlockEditAPI {
      * Gets schematic handler object that can be used to work with schematics
      * @return Schematic handler
      */
-    public static SchematicHandler getSchematicHandler() {
+    public static SchematicHandler<? extends Schematic> getSchematicHandler() {
         return BlockEdit.getSchematicHandler();
     }
+
 }
