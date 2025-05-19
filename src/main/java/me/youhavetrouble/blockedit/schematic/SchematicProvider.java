@@ -15,10 +15,7 @@ public interface SchematicProvider<S extends Schematic> {
      */
     @NotNull String name();
 
-    /**
-     * Get the file extensions of the schematic provider.
-     */
-    @NotNull String[] fileExtensions();
+
 
     /**
      * Save the schematic
