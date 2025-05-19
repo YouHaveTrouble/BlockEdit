@@ -48,6 +48,10 @@ public class SchematicHandler<S extends Schematic> {
             throw new SchematicHandlerRegistrationException("Schematic provider name can only contain lowercase letters and numbers", schematicProvider);
         }
 
+        if (schematicProviderName.equals("file")) {
+            throw new SchematicHandlerRegistrationException("Schematic provider name cannot be 'file'", schematicProvider);
+        }
+
         if (schematicProvidersByName.containsKey(schematicProviderName)) {
             throw new SchematicHandlerRegistrationException("Schematic provider with name " + schematicProvider.name() + " is already registered", schematicProvider);
         }
