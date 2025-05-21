@@ -1,5 +1,6 @@
 package me.youhavetrouble.blockedit.schematic;
 
+import me.youhavetrouble.blockedit.exception.SchematicLoadException;
 import me.youhavetrouble.blockedit.util.Clipboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,8 +16,6 @@ public interface SchematicProvider<S extends Schematic> {
      */
     @NotNull String name();
 
-
-
     /**
      * Save the schematic
      * @param schematic The schematic to save
@@ -26,9 +25,10 @@ public interface SchematicProvider<S extends Schematic> {
     /**
      * Load a schematic
      * @param name Name of the schematic to load
-     * @return The loaded schematic. Returns null if the schematic could not be loaded.
+     * @return The loaded schematic. Returns null if the schematic does not exist.
+     * @throws SchematicLoadException If the schematic could not be loaded
      */
-    @Nullable S load(@NotNull String name);
+    @Nullable S load(@NotNull String name) throws SchematicLoadException;
 
     /**
      * Create a new schematic from the given clipboard

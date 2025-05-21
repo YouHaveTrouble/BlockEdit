@@ -1,5 +1,6 @@
 package me.youhavetrouble.blockedit;
 
+import me.youhavetrouble.blockedit.exception.NoProviderForSchematicFileExtensionException;
 import me.youhavetrouble.blockedit.exception.SchematicHandlerRegistrationException;
 import me.youhavetrouble.blockedit.exception.SchematicLoadException;
 import me.youhavetrouble.blockedit.exception.SchematicSaveException;
@@ -117,13 +118,9 @@ public class SchematicHandler<S extends Schematic> {
         String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
         SchematicProvider<S> schematicProvider = schematicProvidersByExtension.get(fileExtension);
         if (schematicProvider == null) {
-            throw new SchematicLoadException("No schematic provider found for file extension " + fileExtension, schematicName);
+            throw new NoProviderForSchematicFileExtensionException("No schematic provider found for file extension " + fileExtension, schematicName, fileExtension);
         }
-        Schematic schematic = schematicProvider.load(schematicName);
-        if (schematic == null) {
-            throw new SchematicLoadException("Schematic could not be loaded", schematicName);
-        }
-        return schematic;
+        return schematicProvider.load(schematicName);
     }
 
     /**

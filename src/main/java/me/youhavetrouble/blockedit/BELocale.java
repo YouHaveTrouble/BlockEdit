@@ -13,7 +13,8 @@ public class BELocale {
     private static final Locale defaultLocale = Locale.of("en_US");
 
     public final String couldNotFindWandById, selectArea, copiedSelectionToClipboard, selectionReset, firstPositionSet,
-            secondPositionSet, pastingClipboard, clipboardRotated, settingBlocks, replacingBlocks;
+            secondPositionSet, pastingClipboard, clipboardRotated, settingBlocks, replacingBlocks, schematicLoaded,
+            startedLoadingSchematic, noProviderForSchematicFileExtension, schematicLoadError, schematicNotFound;
 
 
     protected BELocale(JsonObject json) {
@@ -27,6 +28,11 @@ public class BELocale {
         clipboardRotated = json.get("clipboard_rotated").getAsString();
         settingBlocks = json.get("setting_blocks").getAsString();
         replacingBlocks = json.get("replacing_blocks").getAsString();
+        startedLoadingSchematic = json.get("started_loading_schematic").getAsString();
+        schematicLoaded = json.get("schematic_loaded").getAsString();
+        noProviderForSchematicFileExtension = json.get("no_provider_for_schematic_file_extension").getAsString();
+        schematicLoadError = json.get("schematic_load_error").getAsString();
+        schematicNotFound = json.get("schematic_not_found").getAsString();
     }
 
     protected static void registerLocale(Locale locale, BELocale blockEditLocale) {

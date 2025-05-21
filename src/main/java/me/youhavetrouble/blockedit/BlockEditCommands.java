@@ -12,9 +12,12 @@ import io.papermc.paper.command.brigadier.argument.resolvers.BlockPositionResolv
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import me.youhavetrouble.blockedit.api.BlockEditAPI;
+import me.youhavetrouble.blockedit.exception.NoProviderForSchematicFileExtensionException;
+import me.youhavetrouble.blockedit.exception.SchematicLoadException;
 import me.youhavetrouble.blockedit.operations.PasteOperation;
 import me.youhavetrouble.blockedit.operations.ReplaceOperation;
 import me.youhavetrouble.blockedit.operations.SetOperation;
+import me.youhavetrouble.blockedit.schematic.Schematic;
 import me.youhavetrouble.blockedit.util.Selection;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,6 +30,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("UnstableApiUsage")
 public class BlockEditCommands {
@@ -370,6 +374,57 @@ public class BlockEditCommands {
                                 )
                 )
 
+                .build();
+    }
+
+    private static LiteralCommandNode<CommandSourceStack> schematicCommand() {
+        return Commands.literal("schematic")
+                .requires(css -> {
+                    if (!(css.getSender() instanceof Player player)) return false;
+                    return player.hasPermission("blockedit.command.schematic");
+                })
+                .then(Commands.literal("load")
+                        .then(Commands.literal("file")
+                                .then(Commands.argument("schematic_name", StringArgumentType.word())
+                                        .requires(commandSourceStack -> {
+                                            if (!(commandSourceStack.getSender() instanceof Player player))
+                                                return false;
+                                            return player.hasPermission("blockedit.command.schematic.load.file");
+                                        })
+                                        .executes(context -> {
+                                            CompletableFuture.runAsync(() -> {
+                                                Player player = (Player) context.getSource().getSender();
+                                                String schematicName = context.getArgument("schematic_name", String.class);
+
+                                                player.sendMessage(Component.text(BELocale.getLocale(player.locale()).startedLoadingSchematic.formatted(schematicName), NamedTextColor.GRAY));
+
+                                                Schematic schematic;
+                                                try {
+                                                    schematic = BlockEditAPI.getSchematicHandler().loadSchematic(schematicName);
+                                                } catch (NoProviderForSchematicFileExtensionException e) {
+                                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).noProviderForSchematicFileExtension.formatted(e.getExtension()), NamedTextColor.RED));
+                                                    return;
+                                                } catch (SchematicLoadException e) {
+                                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).schematicLoadError.formatted(schematicName), NamedTextColor.RED));
+                                                    BlockEdit.getPlugin().getSLF4JLogger().error("Could not load schematic {} due to provider error ", schematicName, e);
+                                                    return;
+                                                }
+
+                                                if (schematic == null) {
+                                                    player.sendMessage(Component.text(BELocale.getLocale(player.locale()).schematicNotFound.formatted(schematicName), NamedTextColor.RED));
+                                                    return;
+                                                }
+
+                                                BEPlayer bePlayer = BEPlayer.getByPlayer(player);
+                                                bePlayer.setClipboard(schematic.asClipboard());
+                                                player.sendMessage(Component.text(BELocale.getLocale(player.locale()).schematicLoaded.formatted(schematicName), NamedTextColor.GRAY));
+                                            });
+
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                )
+                        )
+                )
                 .build();
     }
 
