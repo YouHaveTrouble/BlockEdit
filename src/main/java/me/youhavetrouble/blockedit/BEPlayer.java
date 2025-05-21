@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -15,7 +16,7 @@ public class BEPlayer {
     private static final HashMap<UUID, BEPlayer> playerHashMap = new HashMap<>();
     private Selection selection;
 
-    private final Clipboard clipboard;
+    private Clipboard clipboard;
     private Location selectionPoint1, selectionPoint2;
     private final UUID playerUuid;
 
@@ -39,8 +40,7 @@ public class BEPlayer {
     public void setClipboardFromSelection() {
         if (selection == null) throw new IllegalStateException("Selection is null");
         // add every block between selection points to clipboard
-        clipboard.clear();
-        clipboard.setBaseLocation(getPlayer().getLocation().toBlockLocation());
+        Clipboard clipboard = new Clipboard(getPlayer().getLocation().toBlockLocation());
         for (int x = (int) selection.getMinX(); x <= selection.getMaxX(); x++) {
             for (int y = (int) selection.getMinY(); y <= selection.getMaxY(); y++) {
                 for (int z = (int) selection.getMinZ(); z <= selection.getMaxZ(); z++) {
@@ -50,6 +50,15 @@ public class BEPlayer {
                 }
             }
         }
+        setClipboard(clipboard);
+    }
+
+    public void setClipboard(@Nullable Clipboard clipboard) {
+        if (clipboard == null) {
+            this.clipboard.clear();
+            return;
+        }
+        this.clipboard = clipboard;
     }
 
     public void resetSelection() {
