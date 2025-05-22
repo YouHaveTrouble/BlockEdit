@@ -1,7 +1,7 @@
 package me.youhavetrouble.blockedit;
 
 import com.google.gson.JsonObject;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -14,32 +14,44 @@ public class BELocale {
 
     public final String couldNotFindWandById, selectArea, copiedSelectionToClipboard, selectionReset, firstPositionSet,
             secondPositionSet, pastingClipboard, clipboardRotated, settingBlocks, replacingBlocks, schematicLoaded,
-            startedLoadingSchematic, noProviderForSchematicFileExtension, schematicLoadError, schematicNotFound;
+            startedLoadingSchematic, noProviderForSchematicFileExtension, schematicLoadError, schematicNotFound,
+            providerNotFound;
 
 
     protected BELocale(JsonObject json) {
-        couldNotFindWandById = json.get("could_not_find_wand_by_id").getAsString();
-        selectArea = json.get("select_area").getAsString();
-        copiedSelectionToClipboard = json.get("copied_selection_to_clipboard").getAsString();
-        selectionReset = json.get("selection_reset").getAsString();
-        firstPositionSet = json.get("first_position_set").getAsString();
-        secondPositionSet = json.get("second_position_set").getAsString();
-        pastingClipboard = json.get("pasting_clipboard").getAsString();
-        clipboardRotated = json.get("clipboard_rotated").getAsString();
-        settingBlocks = json.get("setting_blocks").getAsString();
-        replacingBlocks = json.get("replacing_blocks").getAsString();
-        startedLoadingSchematic = json.get("started_loading_schematic").getAsString();
-        schematicLoaded = json.get("schematic_loaded").getAsString();
-        noProviderForSchematicFileExtension = json.get("no_provider_for_schematic_file_extension").getAsString();
-        schematicLoadError = json.get("schematic_load_error").getAsString();
-        schematicNotFound = json.get("schematic_not_found").getAsString();
+        couldNotFindWandById = getString(json, "could_not_find_wand_by_id");
+        selectArea = getString(json, "select_area");
+        copiedSelectionToClipboard = getString(json, "copied_selection_to_clipboard");
+        selectionReset = getString(json, "selection_reset");
+        firstPositionSet = getString(json, "first_position_set");
+        secondPositionSet = getString(json, "second_position_set");
+        pastingClipboard = getString(json, "pasting_clipboard");
+        clipboardRotated = getString(json, "clipboard_rotated");
+        settingBlocks = getString(json, "setting_blocks");
+        replacingBlocks = getString(json, "replacing_blocks");
+        startedLoadingSchematic = getString(json, "started_loading_schematic");
+        schematicLoaded = getString(json, "schematic_loaded");
+        noProviderForSchematicFileExtension = getString(json, "no_provider_for_schematic_file_extension");
+        schematicLoadError = getString(json, "schematic_load_error");
+        schematicNotFound = getString(json, "schematic_not_found");
+        providerNotFound = getString(json, "provider_not_found");
+    }
+
+    @Nullable
+    private String getString(JsonObject jsonObject, String key) {
+        if (jsonObject.has(key)) {
+            return jsonObject.get(key).getAsString();
+        } else {
+            return null;
+        }
     }
 
     protected static void registerLocale(Locale locale, BELocale blockEditLocale) {
         locales.put(locale, blockEditLocale);
     }
 
-    public static BELocale getLocale(@NotNull Locale locale) {
+    public static BELocale getLocale(@Nullable Locale locale) {
+        if (locale == null) return locales.get(defaultLocale);
         BELocale beLocale = locales.get(locale);
         if (beLocale == null) beLocale = locales.get(defaultLocale);
         return beLocale;

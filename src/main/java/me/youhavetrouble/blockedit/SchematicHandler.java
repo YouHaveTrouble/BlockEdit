@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +38,14 @@ public class SchematicHandler<S extends Schematic> {
         } catch (SecurityException e) {
             plugin.getLogger().warning("Could not create schematics directory. Make sure server has read/write access to the plugin folder.");
         }
+    }
+
+    public Collection<String> getSchematicProvidersList() {
+        return schematicProvidersByName.keySet();
+    }
+
+    public SchematicProvider<? extends Schematic> getSchematicProviderByName(String name) {
+        return schematicProvidersByName.get(name);
     }
 
     public void registerSchematicProvider(

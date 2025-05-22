@@ -8,5 +8,11 @@
   "pasting_clipboard": "Wklejanie ze schowka...",
   "clipboard_rotated": "Schowek obrócony o %s stopni",
   "setting_blocks": "Ustawianie bloków...",
-  "replacing_blocks": "Zastępowanie bloków..."
+  "replacing_blocks": "Zastępowanie bloków...",
+  "started_loading_schematic": "Rozpoczęto ładowanie schematu %s",
+  "schematic_loaded": "Załadowano schemat %s",
+  "provider_not_found": "Nie znaleziono dostawcy",
+  "no_provider_for_schematic_file": "Nie znaleziono dostawcy dla typu pliku %s",
+  "schematic_load_error": "Błąd podczas ładowania schematu %s: %s",
+  "schematic_not_found": "Nie znaleziono schematu %s"
 }

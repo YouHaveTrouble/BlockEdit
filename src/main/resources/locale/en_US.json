@@ -11,6 +11,7 @@
   "replacing_blocks": "Replacing blocks...",
   "started_loading_schematic": "Started loading schematic %s",
   "schematic_loaded": "Loaded schematic %s",
+  "provider_not_found": "Provider not found",
   "no_provider_for_schematic_file": "No provider for schematic file type %s",
   "schematic_load_error": "Error loading schematic %s: %s",
   "schematic_not_found": "Schematic %s not found"
